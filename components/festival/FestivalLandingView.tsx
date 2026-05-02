@@ -33,13 +33,13 @@ export function FestivalLandingView({ data }: Props) {
               </span>
             </div>
 
-            <h1 className="m-0 font-extrabold text-[80px] md:text-[156px] leading-[0.86] tracking-tighter2">
+            <h1 className="m-0 font-extrabold text-[52px] md:text-[156px] leading-[0.86] tracking-tighter2">
               Это
               <br />
               <span className="text-accent">Новая</span>
               <br />
               Пышма
-              <span className="font-medium italic text-paper/55 ml-3.5 inline-block text-[60px] md:text-[96px] tracking-tight">
+              <span className="font-medium italic text-paper/55 ml-2 md:ml-3.5 inline-block text-[40px] md:text-[96px] tracking-tight">
                 fest
               </span>
             </h1>
@@ -53,7 +53,7 @@ export function FestivalLandingView({ data }: Props) {
               </Button>
               <a
                 href="#past"
-                className="px-[22px] py-3.5 rounded-lg border-1.5 border-cream bg-transparent text-cream font-bold text-sm uppercase tracking-wide cursor-pointer btn-hover"
+                className="px-[22px] py-3.5 rounded-lg border-1.5 border-cream bg-transparent text-cream font-bold text-sm tracking-wide cursor-pointer btn-hover"
               >
                 как это было
               </a>

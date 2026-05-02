@@ -3,10 +3,17 @@
 @tailwind utilities;
 
 @layer base {
-  html,
+  html {
+    background: theme("colors.paper");
+    color-scheme: light;
+    min-height: 100dvh;
+    /* Запрещаем браузеру показывать свой фон при rubber-band overscroll */
+    overscroll-behavior-y: none;
+  }
   body {
     background: theme("colors.paper");
     color: theme("colors.ink");
+    min-height: 100dvh;
   }
   ::selection {
     background: theme("colors.accent");

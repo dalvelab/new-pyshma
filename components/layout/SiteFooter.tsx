@@ -35,10 +35,16 @@ export function SiteFooter() {
         </div>
         <div className="flex flex-col gap-2">
           <div className="text-[11px] text-paper/55 uppercase tracking-[0.1em]">документы</div>
-          <a href="/legal/terms" className="text-paper border-b border-paper/40 self-start">
+          <a
+            href="/legal/terms"
+            className="text-xs md:text-base text-paper border-b border-paper/40 self-start"
+          >
             Пользовательское соглашение
           </a>
-          <a href="/legal/privacy" className="text-paper border-b border-paper/40 self-start">
+          <a
+            href="/legal/privacy"
+            className="text-xs md:text-base text-paper border-b border-paper/40 self-start"
+          >
             Политика конфиденциальности
           </a>
         </div>
