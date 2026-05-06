@@ -11,7 +11,7 @@ interface Props {
 
 export function LeadStory({ lead }: Props) {
   return (
-    <section className="px-9 pt-2 pb-9 max-w-page mx-auto">
+    <section className="px-4 md:px-9 pt-2 pb-9 max-w-page mx-auto">
       <Card className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr]">
         <PatternBox
           className="h-[220px] md:h-[460px]"

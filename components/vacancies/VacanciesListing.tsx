@@ -45,7 +45,7 @@ export function VacanciesListing({ items }: Props) {
   );
 
   return (
-    <section className="px-9 py-9 max-w-page mx-auto">
+    <section className="px-4 md:px-9 py-9 max-w-page mx-auto">
       <div className="flex flex-col gap-3 mb-7">
         <div className="flex flex-wrap gap-2 items-center">
           <span className="text-xs font-bold uppercase tracking-[0.1em] text-ink-50 mr-2">

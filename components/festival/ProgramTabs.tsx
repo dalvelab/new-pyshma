@@ -87,11 +87,11 @@ export function ProgramTabs({ scenes, activities }: Props) {
       {days.map((d) => (
         <div key={d.k}>
           {/* Заголовок дня */}
-          <div className="flex flex-wrap items-baseline gap-5 mb-[18px] pb-3.5 border-b-1.5 border-ink">
-            <div className="font-extrabold text-[44px] md:text-[56px] leading-[0.9] tracking-tighter2">
+          <div className="flex flex-wrap items-baseline gap-3 sm:gap-5 mb-[18px] pb-3.5 border-b-1.5 border-ink">
+            <div className="font-extrabold text-[32px] sm:text-[44px] md:text-[56px] leading-[0.9] tracking-tighter2">
               {d.header.date}
             </div>
-            <div className="font-semibold text-[22px] md:text-[28px] tracking-tight text-ink-70">
+            <div className="font-semibold text-[18px] sm:text-[22px] md:text-[28px] tracking-tight text-ink-70">
               {d.header.wk}
             </div>
           </div>

@@ -21,7 +21,7 @@ export function FestivalLandingView({ data }: Props) {
           }}
         />
 
-        <div className="relative max-w-page mx-auto px-9 pt-12 pb-8 grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-9">
+        <div className="relative max-w-page mx-auto px-4 md:px-9 pt-12 pb-8 grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-9">
           {/* Left — typography */}
           <div>
             <div className="flex flex-wrap gap-2.5 mb-6">
@@ -33,13 +33,13 @@ export function FestivalLandingView({ data }: Props) {
               </span>
             </div>
 
-            <h1 className="m-0 font-extrabold text-[52px] md:text-[156px] leading-[0.86] tracking-tighter2">
+            <h1 className="m-0 font-extrabold text-[44px] sm:text-[72px] md:text-[156px] leading-[0.86] tracking-tighter2">
               Это
               <br />
               <span className="text-accent">Новая</span>
               <br />
               Пышма
-              <span className="font-medium italic text-paper/55 ml-2 md:ml-3.5 inline-block text-[40px] md:text-[96px] tracking-tight">
+              <span className="font-medium italic text-paper/55 ml-2 md:ml-3.5 inline-block text-[28px] sm:text-[44px] md:text-[96px] tracking-tight">
                 fest
               </span>
             </h1>
@@ -78,7 +78,7 @@ export function FestivalLandingView({ data }: Props) {
               <div className="absolute left-[18px] top-[18px] font-bold text-[11px] text-cream tracking-[0.18em] uppercase px-2.5 py-1 border-1.5 border-cream rounded-full">
                 постер
               </div>
-              <div className="absolute left-[22px] bottom-[22px] text-cream font-extrabold text-[38px] leading-[0.95] tracking-tighter2">
+              <div className="absolute left-[18px] sm:left-[22px] bottom-[18px] sm:bottom-[22px] text-cream font-extrabold text-[28px] sm:text-[38px] leading-[0.95] tracking-tighter2">
                 {data.date}
               </div>
             </div>
@@ -116,11 +116,11 @@ export function FestivalLandingView({ data }: Props) {
 
       {/* COUNTDOWN */}
       <section className="border-b-1.5 border-ink bg-cream">
-        <div className="max-w-page mx-auto px-9 py-7 grid grid-cols-1 md:grid-cols-[auto_1fr_auto] items-center gap-7">
+        <div className="max-w-page mx-auto px-4 md:px-9 py-7 grid grid-cols-1 md:grid-cols-[auto_1fr_auto] items-center gap-7">
           <div className="font-bold text-[11px] tracking-[0.22em] uppercase text-ink-50">
             до открытия
           </div>
-          <div className="grid grid-cols-4 gap-1.5 md:gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 md:gap-3">
             {[
               { v: '16', l: 'дней' },
               { v: '07', l: 'часов' },
@@ -144,13 +144,13 @@ export function FestivalLandingView({ data }: Props) {
       </section>
 
       {/* PROGRAM */}
-      <section id="program" className="px-9 py-12 max-w-page mx-auto">
+      <section id="program" className="px-4 md:px-9 py-12 max-w-page mx-auto">
         <SectionHeader title="Программа дня" />
         <ProgramTabs scenes={data.scenes} activities={data.activities} />
       </section>
 
       {/* VENUES — single big map photo */}
-      <section id="venues" className="px-9 py-12 border-t-1.5 border-ink bg-paper-2">
+      <section id="venues" className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-paper-2">
         <div className="max-w-page mx-auto">
           <SectionHeader title="Карта · площадки" />
           <div
@@ -189,12 +189,12 @@ export function FestivalLandingView({ data }: Props) {
       </section>
 
       {/* PAST YEARS */}
-      <section id="past" className="px-9 py-12 border-t-1.5 border-ink bg-cream">
+      <section id="past" className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-cream">
         <div className="max-w-page mx-auto">
           <SectionHeader
             title={`Архив · ${data.pastYears.length} ${data.pastYears.length === 1 ? 'сезон' : 'сезона'}`}
           />
-          <h2 className="m-0 mb-7 font-extrabold text-[44px] md:text-[64px] leading-[0.95] tracking-tighter2">
+          <h2 className="m-0 mb-7 font-extrabold text-[32px] sm:text-[44px] md:text-[64px] leading-[0.95] tracking-tighter2">
             Как это было
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[22px]">
@@ -202,12 +202,12 @@ export function FestivalLandingView({ data }: Props) {
               <Card key={y.year} className="flex flex-col h-full overflow-hidden">
                 <div className="relative">
                   <PatternBox
-                    className="h-[280px]"
+                    className="h-[200px] sm:h-[280px]"
                     pattern={y.fallbackPattern ?? 'cross'}
                     rounded={false}
                   />
                   <div
-                    className="absolute left-[18px] top-[18px] font-extrabold text-[96px] leading-[0.85] tracking-tighter2 text-cream"
+                    className="absolute left-[18px] top-[18px] font-extrabold text-[64px] sm:text-[96px] leading-[0.85] tracking-tighter2 text-cream"
                     style={{ textShadow: '2px 2px 0 #181412' }}
                   >
                     {y.year}
@@ -226,10 +226,10 @@ export function FestivalLandingView({ data }: Props) {
                       {y.stats.map((st, i) => (
                         <div
                           key={st.l}
-                          className={`px-3.5 py-3 ${i < y.stats!.length - 1 ? 'border-r border-ink-20' : ''}`}
+                          className={`px-2 sm:px-3.5 py-2.5 sm:py-3 ${i < y.stats!.length - 1 ? 'border-r border-ink-20' : ''}`}
                         >
-                          <div className="font-extrabold text-[26px] tracking-tighter">{st.v}</div>
-                          <div className="font-bold text-[10px] text-ink-50 tracking-[0.16em] uppercase mt-0.5">
+                          <div className="font-extrabold text-[20px] sm:text-[26px] tracking-tighter">{st.v}</div>
+                          <div className="font-bold text-[9px] sm:text-[10px] text-ink-50 tracking-[0.12em] sm:tracking-[0.16em] uppercase mt-0.5 truncate">
                             {st.l}
                           </div>
                         </div>
@@ -250,7 +250,7 @@ export function FestivalLandingView({ data }: Props) {
 
       {/* FAQ + CTA */}
       {data.faq && data.faq.length > 0 && (
-        <section className="px-9 py-12 border-t-1.5 border-ink bg-paper-2">
+        <section className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-paper-2">
           <div className="max-w-page mx-auto grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-9">
             <div>
               <SectionHeader title="Быстрые ответы" />

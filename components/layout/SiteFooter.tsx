@@ -1,7 +1,7 @@
 export function SiteFooter() {
   return (
     <footer className="border-t-1.5 border-ink bg-ink text-paper">
-      <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-7 px-9 py-10 max-w-page mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-7 px-4 md:px-9 py-10 max-w-page mx-auto">
         <div className="flex flex-col gap-2.5">
           <span
             aria-label="Это Новая Пышма"

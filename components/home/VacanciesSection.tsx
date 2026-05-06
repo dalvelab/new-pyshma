@@ -14,14 +14,14 @@ export function VacanciesSection({ items }: Props) {
       <div className="flex flex-col gap-2.5">
         {items.map((v) => (
           <a key={v.id} href={`/vacancies/${v.slug}`}>
-            <Card className="p-3.5 flex justify-between gap-2.5 items-center">
+            <Card className="p-3.5 flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-2.5 sm:items-center">
               <div className="min-w-0">
                 <div className="font-bold text-[15px] leading-[1.2]">{v.title}</div>
                 <div className="text-xs text-ink-50 mt-1">
                   {v.experience} · {v.schedule}
                 </div>
               </div>
-              <span className="flex-none px-2.5 py-1.5 rounded-full bg-accent text-white font-bold text-xs">
+              <span className="self-start sm:self-auto flex-none px-2.5 py-1.5 rounded-full bg-accent text-white font-bold text-xs">
                 {v.salary}
               </span>
             </Card>

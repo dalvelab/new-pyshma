@@ -34,7 +34,7 @@ export function SportListing({ items }: Props) {
   }, [items, cat]);
 
   return (
-    <section className="px-9 py-9 max-w-page mx-auto">
+    <section className="px-4 md:px-9 py-9 max-w-page mx-auto">
       <div className="flex flex-wrap gap-2 mb-8">
         {CATS.map((c) => (
           <button

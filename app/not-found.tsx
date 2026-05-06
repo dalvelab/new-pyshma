@@ -12,7 +12,7 @@ export default function NotFound() {
       }
       intro="Страница переехала или никогда не существовала. Можно вернуться на главную или поискать новости."
     >
-      <section className="px-9 py-12 max-w-[640px] mx-auto flex gap-2.5">
+      <section className="px-4 md:px-9 py-12 max-w-[640px] mx-auto flex gap-2.5">
         <Button variant="primary" href="/">
           на главную
         </Button>

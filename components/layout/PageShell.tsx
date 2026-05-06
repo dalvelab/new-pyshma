@@ -21,7 +21,7 @@ export function PageShell({ title, crumbs, intro, toolbar, children }: Props) {
     <>
       <SiteHeader />
       <main>
-        <section className="px-9 pt-10 pb-7 max-w-page mx-auto">
+        <section className="px-4 md:px-9 pt-10 pb-7 max-w-page mx-auto">
           {crumbs && (
             <nav className="flex gap-2 text-xs text-ink-50 font-semibold mb-5 uppercase tracking-[0.1em]">
               <a href="/" className="text-ink-50 hover:text-ink">
@@ -41,7 +41,7 @@ export function PageShell({ title, crumbs, intro, toolbar, children }: Props) {
               ))}
             </nav>
           )}
-          <h1 className="m-0 font-extrabold text-[64px] md:text-[88px] leading-[0.92] tracking-tighter2 text-balance">
+          <h1 className="m-0 font-extrabold text-[44px] sm:text-[56px] md:text-[88px] leading-[0.92] tracking-tighter2 text-balance">
             {title}
           </h1>
           {intro && (

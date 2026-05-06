@@ -11,13 +11,13 @@ interface Props {
 export function VacancyPage({ vacancy: v, similar }: Props) {
   return (
     <article>
-      <section className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-10 px-9 py-10 max-w-page mx-auto">
+      <section className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-10 px-4 md:px-9 py-10 max-w-page mx-auto">
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap gap-2">
             {v.category && <Pill variant="light">{v.category}</Pill>}
             {v.employmentType && <Pill>{v.employmentType}</Pill>}
           </div>
-          <h1 className="m-0 font-extrabold text-[44px] md:text-[60px] leading-[0.96] tracking-tighter2 text-balance">
+          <h1 className="m-0 font-extrabold text-[32px] sm:text-[44px] md:text-[60px] leading-[0.96] tracking-tighter2 text-balance">
             {v.title}
           </h1>
           {v.company && <div className="text-lg text-ink-70">{v.company}</div>}
@@ -118,7 +118,7 @@ export function VacancyPage({ vacancy: v, similar }: Props) {
       </section>
 
       {similar.length > 0 && (
-        <section className="px-9 py-9 border-t-1.5 border-ink bg-paper-2">
+        <section className="px-4 md:px-9 py-9 border-t-1.5 border-ink bg-paper-2">
           <div className="max-w-page mx-auto">
             <h2 className="m-0 mb-5 font-extrabold text-[28px] tracking-tight">Похожие вакансии</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

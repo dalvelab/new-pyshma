@@ -49,7 +49,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
       }
     >
       {q && hits.length === 0 ? (
-        <section className="px-9 py-12 max-w-page mx-auto">
+        <section className="px-4 md:px-9 py-12 max-w-page mx-auto">
           <div className="border-1.5 border-dashed border-ink-30 rounded-xl p-10 text-center">
             <div className="font-extrabold text-3xl">Ничего не нашли</div>
             <div className="mt-3 text-base text-ink-70">
@@ -58,7 +58,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
           </div>
         </section>
       ) : (
-        <section className="px-9 py-9 max-w-page mx-auto flex flex-col gap-10">
+        <section className="px-4 md:px-9 py-9 max-w-page mx-auto flex flex-col gap-10">
           {(Object.keys(grouped) as SearchHit['kind'][]).map(
             (k) =>
               grouped[k].length > 0 && (

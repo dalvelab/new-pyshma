@@ -62,7 +62,7 @@ export default async function HomePage() {
         <NewsGrid items={data.news} />
         <AfishaRow items={data.events} />
         <FestTeaser teaser={data.festival} />
-        <section className="px-9 py-9 border-b-1.5 border-ink max-w-page mx-auto">
+        <section className="px-4 md:px-9 py-9 border-b-1.5 border-ink max-w-page mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-9">
             <SportSection items={data.sport} />
             <VacanciesSection items={data.vacancies} />

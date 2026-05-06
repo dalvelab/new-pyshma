@@ -24,7 +24,7 @@ export function NewsListing({ items }: Props) {
   const visible = filtered.slice(0, shown);
 
   return (
-    <section className="px-9 py-9 max-w-page mx-auto">
+    <section className="px-4 md:px-9 py-9 max-w-page mx-auto">
       <div className="flex flex-wrap gap-2.5 mb-7">
         {FILTERS.map((f) => (
           <button

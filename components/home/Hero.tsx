@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/Button';
 
 export function Hero() {
   return (
-    <section className="px-9 pt-10 pb-7 max-w-page mx-auto">
-      <h1 className="m-0 font-extrabold text-[56px] md:text-[144px] leading-[0.92] tracking-tighter2 text-balance">
+    <section className="px-4 md:px-9 pt-10 pb-7 max-w-page mx-auto">
+      <h1 className="m-0 font-extrabold text-[40px] sm:text-[64px] md:text-[144px] leading-[0.92] tracking-tighter2 text-balance">
         Это <span className="text-accent">Новая</span>
         <br />
         Пышма.

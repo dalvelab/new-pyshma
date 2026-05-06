@@ -10,7 +10,7 @@ interface Props {
 export function SportPage({ section }: Props) {
   return (
     <article>
-      <section className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-10 px-9 py-10 max-w-page mx-auto">
+      <section className="grid grid-cols-1 md:grid-cols-[1.2fr_1fr] gap-10 px-4 md:px-9 py-10 max-w-page mx-auto">
         <div className="flex flex-col gap-4">
           <div className="flex gap-2">
             {section.category && <Pill variant="accent">{section.category}</Pill>}
@@ -30,7 +30,7 @@ export function SportPage({ section }: Props) {
         />
       </section>
 
-      <section className="px-9 py-9 border-t-1.5 border-ink bg-paper-2">
+      <section className="px-4 md:px-9 py-9 border-t-1.5 border-ink bg-paper-2">
         <div className="max-w-page mx-auto grid grid-cols-1 md:grid-cols-3 gap-7">
           <div>
             <div className="text-[11px] uppercase tracking-[0.1em] text-ink-50 font-bold mb-2">
@@ -78,7 +78,7 @@ export function SportPage({ section }: Props) {
       </section>
 
       {section.gallery && section.gallery.length > 0 && (
-        <section className="px-9 py-9 max-w-page mx-auto">
+        <section className="px-4 md:px-9 py-9 max-w-page mx-auto">
           <h2 className="m-0 mb-4 font-extrabold text-2xl tracking-tight">Фото секции</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {section.gallery.map((p, i) => (
