@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { SearchHit } from '@/lib/types';
 
 const RECENT_KEY = 'ship.search.recent';
@@ -71,7 +72,8 @@ export function SearchModal({ open, onClose }: Props) {
   };
 
   if (!open) return null;
-  return (
+  if (typeof document === 'undefined') return null;
+  return createPortal(
     <div
       className="fixed inset-0 z-50 bg-ink/60 backdrop-blur-sm flex items-start justify-center p-6 pt-[10vh]"
       onClick={onClose}
@@ -165,6 +167,7 @@ export function SearchModal({ open, onClose }: Props) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

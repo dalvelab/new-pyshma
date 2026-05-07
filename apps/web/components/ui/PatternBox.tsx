@@ -257,7 +257,7 @@ export function PatternBox({
       </svg>
       {label && (
         <span
-          className={`absolute left-3 bottom-2.5 px-2 py-1 rounded text-[11px] font-medium tracking-wider lowercase z-10 ${dark ? 'bg-ink text-cream' : 'bg-cream text-ink'}`}
+          className={`absolute left-3 bottom-2.5 px-2 py-1 rounded text-[11px] font-medium tracking-wider lowercase ${dark ? 'bg-ink text-cream' : 'bg-cream text-ink'}`}
         >
           {label}
         </span>

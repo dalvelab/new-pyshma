@@ -1,5 +1,6 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkUnwrapImages from 'remark-unwrap-images';
 import { formatNewsTime } from '@/components/home/format';
 import { PatternBox } from '@/components/ui/PatternBox';
 import { Pill } from '@/components/ui/Pill';
@@ -35,7 +36,7 @@ export function ArticlePage({ article }: Props) {
       <section className="px-4 md:px-9 py-10 max-w-[760px] mx-auto">
         {article.body && (
           <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
+            remarkPlugins={[remarkGfm, remarkUnwrapImages]}
             components={{
               p: ({ children }) => (
                 <p className="my-5 text-[18px] leading-[1.65] text-ink">{children}</p>
@@ -97,19 +98,6 @@ export function ArticlePage({ article }: Props) {
             {article.body}
           </ReactMarkdown>
         )}
-        <div className="mt-12 pt-6 border-t-1.5 border-ink flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <span className="text-sm text-ink-50">Поделиться:</span>
-          <div className="flex flex-wrap gap-2">
-            {['ВК', 'TG', 'Max', 'copy'].map((s) => (
-              <button
-                key={s}
-                className="px-3 py-2 rounded-full border-1.5 border-ink font-semibold text-xs"
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
       </section>
     </article>
   );

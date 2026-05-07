@@ -14,6 +14,11 @@
     background: theme("colors.paper");
     color: theme("colors.ink");
     min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+  body > main {
+    flex: 1 0 auto;
   }
   ::selection {
     background: theme("colors.accent");
