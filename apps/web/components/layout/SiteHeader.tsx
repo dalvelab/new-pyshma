@@ -9,7 +9,7 @@ export function SiteHeader() {
         <Link
           href="/"
           aria-label="Это Новая Пышма"
-          className="block h-[40px] w-[88px] md:h-[46px] md:w-[100px] bg-ink shrink-0"
+          className="block h-[40px] w-[62px] md:h-[46px] md:w-[71px] bg-ink shrink-0"
           style={{
             WebkitMask: 'url(/logo-stacked.svg) center/contain no-repeat',
             mask: 'url(/logo-stacked.svg) center/contain no-repeat',

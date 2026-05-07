@@ -1,11 +1,14 @@
+import Link from 'next/link';
+
 export function SiteFooter() {
   return (
     <footer className="border-t-1.5 border-ink bg-ink text-paper">
       <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-7 px-4 md:px-9 py-10 max-w-page mx-auto">
         <div className="flex flex-col gap-2.5">
-          <span
+          <Link
+            href="/"
             aria-label="Это Новая Пышма"
-            className="block h-9 w-20 bg-paper"
+            className="block h-9 w-14 bg-paper self-start"
             style={{
               WebkitMask: 'url(/logo-stacked.svg) center/contain no-repeat',
               mask: 'url(/logo-stacked.svg) center/contain no-repeat',

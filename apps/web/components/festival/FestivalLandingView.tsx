@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { PatternBox } from '@/components/ui/PatternBox';
 import type { FestivalLanding } from '@/lib/types';
+import { FestivalCountdown } from './FestivalCountdown';
 import { ProgramTabs } from './ProgramTabs';
 
 interface Props {
@@ -13,14 +14,6 @@ export function FestivalLandingView({ data }: Props) {
     <article>
       {/* HERO — editorial poster on dark */}
       <section className="relative bg-ink text-cream overflow-hidden border-b-1.5 border-ink">
-        <div
-          className="absolute inset-0 pointer-events-none opacity-60"
-          style={{
-            background:
-              'repeating-linear-gradient(135deg, rgba(250,80,35,0.18) 0 22px, transparent 22px 44px)',
-          }}
-        />
-
         <div className="relative max-w-page mx-auto px-4 md:px-9 pt-12 pb-8 grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-9">
           {/* Left — typography */}
           <div>
@@ -115,33 +108,7 @@ export function FestivalLandingView({ data }: Props) {
       </section>
 
       {/* COUNTDOWN */}
-      <section className="border-b-1.5 border-ink bg-cream">
-        <div className="max-w-page mx-auto px-4 md:px-9 py-7 grid grid-cols-1 md:grid-cols-[auto_1fr_auto] items-center gap-7">
-          <div className="font-bold text-[11px] tracking-[0.22em] uppercase text-ink-50">
-            до открытия
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 md:gap-3">
-            {[
-              { v: '16', l: 'дней' },
-              { v: '07', l: 'часов' },
-              { v: '42', l: 'минут' },
-              { v: '08', l: 'секунд' },
-            ].map((x) => (
-              <div
-                key={x.l}
-                className="px-2 md:px-5 py-3.5 border-1.5 border-ink rounded-[10px] bg-paper flex flex-col md:flex-row items-start md:items-baseline md:justify-between gap-1 md:gap-2"
-              >
-                <span className="font-extrabold text-[28px] md:text-[44px] leading-none tracking-tighter">
-                  {x.v}
-                </span>
-                <span className="font-bold text-[10px] md:text-[11px] tracking-[0.06em] md:tracking-[0.18em] uppercase text-ink-50">
-                  {x.l}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <FestivalCountdown startsAt={data.startsAt} />
 
       {/* PROGRAM */}
       <section id="program" className="px-4 md:px-9 py-12 max-w-page mx-auto">
@@ -275,7 +242,7 @@ export function FestivalLandingView({ data }: Props) {
               </div>
             </div>
 
-            <div className="relative bg-ink text-cream rounded-2xl p-7 flex flex-col gap-5 overflow-hidden">
+            <div className="relative self-start bg-ink text-cream rounded-2xl p-7 flex flex-col gap-5 overflow-hidden">
               <div
                 className="absolute inset-0 opacity-70 pointer-events-none"
                 style={{

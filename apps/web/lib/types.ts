@@ -5,16 +5,6 @@ export type Pattern = 'diag' | 'dots' | 'cross' | 'warm' | 'block' | 'sun' | 'zi
 
 /* ───────── News ───────── */
 
-export interface ArticleBlock {
-  type: 'paragraph' | 'heading' | 'quote' | 'image' | 'video';
-  /** paragraph / heading / quote text; image alt; video title */
-  text?: string;
-  /** image / video src */
-  url?: string;
-  /** quote attribution */
-  author?: string;
-}
-
 export interface Article {
   id: string;
   slug: string;
@@ -25,8 +15,8 @@ export interface Article {
   cover?: { url: string; alt?: string } | null;
   fallbackPattern?: Pattern;
   isLead?: boolean;
-  /** Доступно на странице новости; на главной/листинге не нужно */
-  body?: ArticleBlock[];
+  /** Markdown — рендерится на странице новости (на листинге не используется) */
+  body?: string;
   /** Короткий лид для листинга/детальной */
   excerpt?: string;
   /** Связанные материалы для блока «По теме» */
@@ -144,6 +134,7 @@ export interface FestivalPastYear {
 
 export interface FestivalLanding {
   date: string;
+  startsAt: string; // ISO datetime — момент старта для обратного отсчёта
   weekday: string;
   city: string;
   tagline: string;
