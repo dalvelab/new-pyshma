@@ -1,34 +1,139 @@
-import { mockEventsAll, mockFestivalLanding, mockNewsAll, mockSport, mockVacancies } from './mock';
-import { fetchStrapi } from './strapi';
+import { mockEventsAll, mockFestivalLanding, mockSport, mockVacancies } from './mock';
+import {
+  absoluteMediaUrl,
+  fetchStrapi,
+  fetchStrapiPage,
+  type StrapiEntry,
+  type StrapiMedia,
+} from './strapi';
 import type { Article, Event, FestivalLanding, SearchHit, SportSection, Vacancy } from './types';
 
 /* ──────────────── News ──────────────── */
 
+interface StrapiArticle extends StrapiEntry {
+  title: string;
+  slug: string;
+  category?: { name: string } | null;
+  excerpt?: string | null;
+  body?: string | null;
+  cover?: StrapiMedia | null;
+  coverAlt?: string | null;
+  readingTime?: number | null;
+  isLead?: boolean | null;
+}
+
+function mapArticle(entry: StrapiArticle): Article {
+  const coverUrl = absoluteMediaUrl(entry.cover?.url) ?? '';
+  return {
+    id: String(entry.id),
+    slug: entry.slug,
+    title: entry.title,
+    category: entry.category?.name ?? '',
+    createdAt: entry.createdAt ?? new Date().toISOString(),
+    readingTime: entry.readingTime ?? undefined,
+    cover: { url: coverUrl, alt: entry.coverAlt ?? entry.cover?.alternativeText ?? undefined },
+    isLead: entry.isLead ?? undefined,
+    body: entry.body ?? undefined,
+    excerpt: entry.excerpt ?? undefined,
+  };
+}
+
+const ARTICLE_POPULATE = 'populate[cover]=true&populate[category]=true';
+
+/** Только поля, нужные для карточки в листинге — без тяжёлого `body`. */
+const ARTICLE_LISTING_FIELDS =
+  'fields[0]=title&fields[1]=slug&fields[2]=excerpt&fields[3]=createdAt' +
+  '&fields[4]=isLead&fields[5]=readingTime&fields[6]=coverAlt';
+
 export async function getAllNews(): Promise<Article[]> {
-  const remote = await fetchStrapi<Article[]>('articles', {
-    query: '?sort=publishedAt:desc&pagination[limit]=100&populate=*',
+  const remote = await fetchStrapi<StrapiArticle[]>('articles', {
+    query: `?sort=createdAt:desc&pagination[limit]=100&${ARTICLE_POPULATE}`,
   });
-  return remote?.length ? remote : mockNewsAll;
+  return remote?.map(mapArticle) ?? [];
 }
 
 export async function getNewsBySlug(slug: string): Promise<Article | null> {
-  const remote = await fetchStrapi<Article[]>('articles', {
-    query: `?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`,
+  const remote = await fetchStrapi<StrapiArticle[]>('articles', {
+    query: `?filters[slug][$eq]=${encodeURIComponent(slug)}&${ARTICLE_POPULATE}`,
   });
-  if (remote?.[0]) return remote[0];
-  return mockNewsAll.find((a) => a.slug === slug) ?? null;
+  return remote?.[0] ? mapArticle(remote[0]) : null;
+}
+
+export async function getLeadArticle(): Promise<Article | null> {
+  const remote = await fetchStrapi<StrapiArticle[]>('articles', {
+    query: `?filters[isLead][$eq]=true&pagination[limit]=1&${ARTICLE_POPULATE}`,
+  });
+  return remote?.[0] ? mapArticle(remote[0]) : null;
+}
+
+export async function getLatestNews(limit = 4): Promise<Article[]> {
+  const remote = await fetchStrapi<StrapiArticle[]>('articles', {
+    query: `?sort=createdAt:desc&pagination[limit]=${limit}&${ARTICLE_POPULATE}`,
+  });
+  return remote?.map(mapArticle) ?? [];
+}
+
+export interface NewsPage {
+  items: Article[];
+  page: number;
+  pageSize: number;
+  total: number;
+  pageCount: number;
+}
+
+interface GetNewsPageArgs {
+  page?: number;
+  pageSize?: number;
+  /** Фильтр по имени категории; undefined = без фильтра. */
+  category?: string;
+}
+
+export async function getNewsPage({
+  page = 1,
+  pageSize = 8,
+  category,
+}: GetNewsPageArgs = {}): Promise<NewsPage> {
+  const filter = category
+    ? `&filters[category][name][$eq]=${encodeURIComponent(category)}`
+    : '';
+  const query =
+    `?sort=createdAt:desc` +
+    `&pagination[page]=${page}` +
+    `&pagination[pageSize]=${pageSize}` +
+    `&pagination[withCount]=true` +
+    `&${ARTICLE_POPULATE}` +
+    `&${ARTICLE_LISTING_FIELDS}` +
+    filter;
+  const res = await fetchStrapiPage<StrapiArticle>('articles', { query });
+  if (!res) return { items: [], page, pageSize, total: 0, pageCount: 0 };
+  return {
+    items: res.data.map(mapArticle),
+    page: res.meta.pagination.page,
+    pageSize: res.meta.pagination.pageSize,
+    total: res.meta.pagination.total,
+    pageCount: res.meta.pagination.pageCount,
+  };
+}
+
+/* ──────────────── Categories ──────────────── */
+
+interface StrapiCategory extends StrapiEntry {
+  name: string;
+  slug: string;
+}
+
+export async function getAllCategories(): Promise<string[]> {
+  const remote = await fetchStrapi<StrapiCategory[]>('categories', {
+    query: '?sort=name:asc&pagination[limit]=100',
+  });
+  return remote?.map((c) => c.name) ?? [];
 }
 
 export async function getRelatedNews(article: Article, max = 3): Promise<Article[]> {
   const all = await getAllNews();
-  const explicit = (article.relatedSlugs ?? [])
-    .map((s) => all.find((a) => a.slug === s))
-    .filter((a): a is Article => Boolean(a));
-  if (explicit.length >= max) return explicit.slice(0, max);
-  const fillers = all.filter(
-    (a) => a.slug !== article.slug && a.category === article.category && !explicit.includes(a),
-  );
-  return [...explicit, ...fillers].slice(0, max);
+  return all
+    .filter((a) => a.slug !== article.slug && a.category === article.category)
+    .slice(0, max);
 }
 
 /* ──────────────── Events ──────────────── */
@@ -112,7 +217,6 @@ export async function searchAll(qRaw: string): Promise<SearchHit[]> {
         title: a.title,
         subtitle: a.category,
         excerpt: a.excerpt,
-        pattern: a.fallbackPattern,
       });
     }
   }

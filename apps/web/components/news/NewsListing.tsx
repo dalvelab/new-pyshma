@@ -1,38 +1,63 @@
 'use client';
 
-import { useState } from 'react';
-import type { Article } from '@/lib/types';
+import { useMemo, useState, useTransition } from 'react';
+import { loadNewsPage } from '@/lib/actions';
+import type { NewsPage } from '@/lib/queries';
 import { NewsCard } from '@/components/home/NewsCard';
 import { Button } from '@/components/ui/Button';
 
 interface Props {
-  items: Article[];
+  initial: NewsPage;
+  categories: string[];
 }
 
-const FILTERS = ['все', 'город', 'культура', 'спорт', 'афиша'] as const;
-const PAGE = 8;
+const ALL = 'все';
 
-/** Listing-страница новостей с категорийным фильтром и пагинацией «Показать ещё». */
-export function NewsListing({ items }: Props) {
-  const [cat, setCat] = useState<(typeof FILTERS)[number]>('все');
-  const [shown, setShown] = useState(PAGE);
+/** Listing-страница новостей: фильтр и «показать ещё» дёргают server action loadNewsPage. */
+export function NewsListing({ initial, categories }: Props) {
+  const filters = useMemo(() => [ALL, ...categories], [categories]);
+  const [cat, setCat] = useState<string>(ALL);
+  const [items, setItems] = useState(initial.items);
+  const [page, setPage] = useState(initial.page);
+  const [total, setTotal] = useState(initial.total);
+  const [pending, startTransition] = useTransition();
 
-  const filtered =
-    cat === 'все'
-      ? items
-      : items.filter((a) => a.category === cat || (cat === 'город' && a.category === 'главное'));
-  const visible = filtered.slice(0, shown);
+  const handleFilter = (next: string) => {
+    if (next === cat) return;
+    setCat(next);
+    startTransition(async () => {
+      const res = await loadNewsPage({
+        page: 1,
+        category: next === ALL ? undefined : next,
+      });
+      setItems(res.items);
+      setPage(res.page);
+      setTotal(res.total);
+    });
+  };
+
+  const handleMore = () => {
+    startTransition(async () => {
+      const res = await loadNewsPage({
+        page: page + 1,
+        category: cat === ALL ? undefined : cat,
+      });
+      setItems((prev) => [...prev, ...res.items]);
+      setPage(res.page);
+      setTotal(res.total);
+    });
+  };
+
+  const hasMore = items.length < total;
 
   return (
     <section className="px-4 md:px-9 py-9 max-w-page mx-auto">
       <div className="flex flex-wrap gap-2.5 mb-7">
-        {FILTERS.map((f) => (
+        {filters.map((f) => (
           <button
             key={f}
-            onClick={() => {
-              setCat(f);
-              setShown(PAGE);
-            }}
+            onClick={() => handleFilter(f)}
+            disabled={pending && cat === f}
             className={`px-4 py-2 rounded-full border-1.5 border-ink font-semibold text-sm cursor-pointer btn-hover ${
               cat === f ? 'bg-accent text-white' : 'bg-cream text-ink'
             }`}
@@ -40,34 +65,24 @@ export function NewsListing({ items }: Props) {
             {f}
           </button>
         ))}
-        <span className="ml-auto self-center text-xs text-ink-50 font-semibold">
-          {filtered.length} материалов
-        </span>
       </div>
 
-      {visible.length === 0 ? (
+      {items.length === 0 ? (
         <div className="border-1.5 border-dashed border-ink-30 rounded-xl p-10 text-center text-ink-70">
-          В этой категории пока ничего нет.
+          {pending ? 'Загружаем…' : 'В этой категории пока ничего нет.'}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {visible.map((a) => (
+          {items.map((a) => (
             <NewsCard key={a.id} article={a} />
           ))}
         </div>
       )}
 
-      {shown < filtered.length && (
+      {hasMore && (
         <div className="mt-8 flex justify-center">
-          <Button variant="primary" full={false} href="#">
-            <span
-              onClick={(e) => {
-                e.preventDefault();
-                setShown((s) => s + PAGE);
-              }}
-            >
-              показать ещё ({filtered.length - shown})
-            </span>
+          <Button variant="primary" onClick={handleMore}>
+            {pending ? 'загружаем…' : `показать ещё (${total - items.length})`}
           </Button>
         </div>
       )}

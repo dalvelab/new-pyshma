@@ -1,13 +1,15 @@
-import { ReactNode } from 'react';
+import type { MouseEventHandler, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
   variant?: 'primary' | 'ghost';
   full?: boolean;
   href?: string;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+  type?: 'button' | 'submit';
 }
 
-export function Button({ children, variant = 'ghost', full, href }: Props) {
+export function Button({ children, variant = 'ghost', full, href, onClick, type = 'button' }: Props) {
   const cls =
     'inline-flex items-center justify-center px-[18px] py-3 rounded-lg border-1.5 border-ink ' +
     'font-bold text-sm cursor-pointer btn-hover ' +
@@ -19,5 +21,9 @@ export function Button({ children, variant = 'ghost', full, href }: Props) {
         {children}
       </a>
     );
-  return <button className={cls}>{children}</button>;
+  return (
+    <button type={type} className={cls} onClick={onClick}>
+      {children}
+    </button>
+  );
 }

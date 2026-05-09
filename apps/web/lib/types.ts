@@ -10,17 +10,14 @@ export interface Article {
   slug: string;
   title: string;
   category: string; // 'город' | 'культура' | 'спорт' | 'афиша' | 'главное' …
-  publishedAt: string; // ISO
+  createdAt: string; // ISO
   readingTime?: number; // minutes
-  cover?: { url: string; alt?: string } | null;
-  fallbackPattern?: Pattern;
+  cover: { url: string; alt?: string };
   isLead?: boolean;
   /** Markdown — рендерится на странице новости (на листинге не используется) */
   body?: string;
   /** Короткий лид для листинга/детальной */
   excerpt?: string;
-  /** Связанные материалы для блока «По теме» */
-  relatedSlugs?: string[];
 }
 
 /* ───────── Events / Афиша ───────── */

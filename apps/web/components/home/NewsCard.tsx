@@ -1,7 +1,7 @@
+import Image from 'next/image';
 import type { Article } from '@/lib/types';
 import { Card } from '@/components/ui/Card';
 import { Pill } from '@/components/ui/Pill';
-import { PatternBox } from '@/components/ui/PatternBox';
 import { formatNewsDate } from './format';
 
 interface Props {
@@ -13,19 +13,22 @@ export function NewsCard({ article, big }: Props) {
   return (
     <a href={`/news/${article.slug}`} className="block">
       <Card className="flex flex-col h-full">
-        <PatternBox
-          className={big ? 'h-[220px]' : 'h-40'}
-          pattern={article.fallbackPattern ?? 'cross'}
-          label="фото"
-          rounded={false}
-        />
+        <div className={`relative ${big ? 'h-[220px]' : 'h-40'} overflow-hidden`}>
+          <Image
+            src={article.cover.url}
+            alt={article.cover.alt ?? article.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover"
+          />
+        </div>
         <div className="p-4 flex flex-col gap-2">
           <div className="flex gap-2 items-center">
-            <Pill variant={article.category === 'главное' ? 'accent' : 'default'}>
+            <Pill variant='default'>
               {article.category}
             </Pill>
             <span className="font-sans text-[11px] text-ink-50">
-              {formatNewsDate(article.publishedAt)}
+              {formatNewsDate(article.createdAt)}
             </span>
           </div>
           <h3

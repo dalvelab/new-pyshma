@@ -1,7 +1,7 @@
 import { fetchStrapi } from '@/lib/strapi';
-import { mockLead, mockNews, mockEvents, mockFestival, mockSport, mockVacancies } from '@/lib/mock';
+import { getLatestNews, getLeadArticle } from '@/lib/queries';
+import { mockEvents, mockFestival, mockSport, mockVacancies } from '@/lib/mock';
 import type {
-  Article,
   Event,
   FestivalTeaser,
   SportSection as SportSectionT,
@@ -19,19 +19,14 @@ import { SportSection } from '@/components/home/SportSection';
 import { VacanciesSection } from '@/components/home/VacanciesSection';
 
 /* App Router page = React Server Component by default.
-   Data is fetched at request time, cached for `revalidate` seconds.
-   Falls back to mock data when STRAPI_URL is not configured. */
+   Data is fetched at request time, cached for `revalidate` seconds. */
 
 export const revalidate = 60;
 
 async function getHomeData() {
-  const [leadRes, newsRes, eventsRes, sportRes, vacanciesRes, festRes] = await Promise.all([
-    fetchStrapi<Article[]>('articles', {
-      query: '?filters[isLead][$eq]=true&pagination[limit]=1&populate=*',
-    }),
-    fetchStrapi<Article[]>('articles', {
-      query: '?sort=publishedAt:desc&pagination[limit]=4&populate=*',
-    }),
+  const [lead, news, eventsRes, sportRes, vacanciesRes, festRes] = await Promise.all([
+    getLeadArticle(),
+    getLatestNews(4),
     fetchStrapi<Event[]>('events', {
       query: '?filters[startsAt][$gte]=now&sort=startsAt:asc&pagination[limit]=4&populate=*',
     }),
@@ -41,8 +36,8 @@ async function getHomeData() {
   ]);
 
   return {
-    lead: leadRes?.[0] ?? mockLead,
-    news: newsRes?.length ? newsRes : mockNews,
+    lead,
+    news,
     events: eventsRes?.length ? eventsRes : mockEvents,
     sport: (sportRes?.length ? sportRes : mockSport).slice(0, 5),
     vacancies: (vacanciesRes?.length ? vacanciesRes : mockVacancies).slice(0, 5),
@@ -58,7 +53,7 @@ export default async function HomePage() {
       <SiteHeader />
       <main>
         <Hero />
-        <LeadStory lead={data.lead} />
+        {data.lead && <LeadStory lead={data.lead} />}
         <NewsGrid items={data.news} />
         <AfishaRow items={data.events} />
         <FestTeaser teaser={data.festival} />
