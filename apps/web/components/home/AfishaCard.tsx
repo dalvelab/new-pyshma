@@ -1,5 +1,5 @@
+import Image from 'next/image';
 import { Card } from '@/components/ui/Card';
-import { PatternBox } from '@/components/ui/PatternBox';
 import { Pill } from '@/components/ui/Pill';
 import type { Event } from '@/lib/types';
 import { formatEventDate } from './format';
@@ -12,11 +12,15 @@ export function AfishaCard({ event }: Props) {
   return (
     <a href={`/afisha/${event.slug}`} className="block h-full">
       <Card className="flex flex-col h-full">
-        <PatternBox
-          className="h-[150px]"
-          pattern={event.fallbackPattern ?? 'warm'}
-          rounded={false}
-        />
+        <div className="relative h-[150px] overflow-hidden">
+          <Image
+            src={event.cover.url}
+            alt={event.cover.alt ?? event.title}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover"
+          />
+        </div>
         <div className="p-3.5 flex flex-col gap-2 flex-1">
           <div className="font-bold text-[11px] tracking-[0.08em] text-accent uppercase">
             {formatEventDate(event.startsAt)}

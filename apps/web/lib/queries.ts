@@ -1,4 +1,4 @@
-import { mockEventsAll, mockFestivalLanding, mockSport, mockVacancies } from './mock';
+import { mockFestivalLanding, mockSport, mockVacancies } from './mock';
 import {
   absoluteMediaUrl,
   fetchStrapi,
@@ -60,8 +60,9 @@ export async function getNewsBySlug(slug: string): Promise<Article | null> {
 }
 
 export async function getLeadArticle(): Promise<Article | null> {
+  // lifecycle гарантирует единственного лида, sort на случай дрейфа БД
   const remote = await fetchStrapi<StrapiArticle[]>('articles', {
-    query: `?filters[isLead][$eq]=true&pagination[limit]=1&${ARTICLE_POPULATE}`,
+    query: `?filters[isLead][$eq]=true&sort=createdAt:desc&pagination[limit]=1&${ARTICLE_POPULATE}`,
   });
   return remote?.[0] ? mapArticle(remote[0]) : null;
 }
@@ -136,21 +137,95 @@ export async function getRelatedNews(article: Article, max = 3): Promise<Article
     .slice(0, max);
 }
 
-/* ──────────────── Events ──────────────── */
+/* ──────────────── Events / Афиша ────────────────
+   Источник правды — Strapi Afisha (привязка показа к локации/билету).
+   Show хранит сам контент (постер, описание), Location — площадку. */
+
+interface StrapiShow extends StrapiEntry {
+  title: string;
+  slug: string;
+  age_limit?: number | null;
+  small_description?: string | null;
+  description?: string | null;
+  image?: StrapiMedia | null;
+  gallery?: StrapiMedia[] | null;
+}
+
+interface StrapiLocation extends StrapiEntry {
+  name: string;
+  address: string;
+  link?: string | null;
+}
+
+interface StrapiAfisha extends StrapiEntry {
+  title: string;
+  slug: string;
+  startsAt: string;
+  ticketUrl?: string | null;
+  free?: boolean | null;
+  priceFrom?: number | null;
+  show?: StrapiShow | null;
+  location?: StrapiLocation | null;
+}
+
+function mapAfisha(entry: StrapiAfisha): Event {
+  const coverUrl = absoluteMediaUrl(entry.show?.image?.url) ?? '';
+  const gallery = entry.show?.gallery
+    ?.slice(0, 10)
+    .map((m) => ({
+      url: absoluteMediaUrl(m.url) ?? '',
+      alt: m.alternativeText ?? undefined,
+    }))
+    .filter((m) => m.url);
+  return {
+    id: String(entry.id),
+    slug: entry.slug,
+    title: entry.title || entry.show?.title || '',
+    startsAt: entry.startsAt ?? entry.createdAt ?? new Date().toISOString(),
+    place: entry.location?.name ?? '',
+    address: entry.location?.address ?? undefined,
+    free: entry.free ?? false,
+    priceFrom: entry.priceFrom ?? undefined,
+    description: entry.show?.small_description ?? undefined,
+    body: entry.show?.description ?? undefined,
+    cover: {
+      url: coverUrl,
+      alt: entry.show?.image?.alternativeText ?? entry.show?.title ?? entry.title,
+    },
+    ageLimit: entry.show?.age_limit ?? undefined,
+    ticketUrl: entry.ticketUrl ?? undefined,
+    gallery: gallery?.length ? gallery : undefined,
+  };
+}
+
+const AFISHA_POPULATE =
+  'populate[show][populate][image]=true' +
+  '&populate[show][populate][gallery]=true' +
+  '&populate[location]=true';
 
 export async function getAllEvents(): Promise<Event[]> {
-  const remote = await fetchStrapi<Event[]>('events', {
-    query: '?sort=startsAt:asc&pagination[limit]=100&populate=*',
+  const remote = await fetchStrapi<StrapiAfisha[]>('afishas', {
+    query: `?sort=startsAt:asc&pagination[limit]=100&${AFISHA_POPULATE}`,
   });
-  return remote?.length ? remote : mockEventsAll;
+  return remote?.map(mapAfisha) ?? [];
 }
 
 export async function getEventBySlug(slug: string): Promise<Event | null> {
-  const remote = await fetchStrapi<Event[]>('events', {
-    query: `?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`,
+  const remote = await fetchStrapi<StrapiAfisha[]>('afishas', {
+    query: `?filters[slug][$eq]=${encodeURIComponent(slug)}&${AFISHA_POPULATE}`,
   });
-  if (remote?.[0]) return remote[0];
-  return mockEventsAll.find((e) => e.slug === slug) ?? null;
+  return remote?.[0] ? mapAfisha(remote[0]) : null;
+}
+
+/** Ближайшие события (для главной) — только будущие, отсортированы по дате. */
+export async function getUpcomingEvents(limit = 4): Promise<Event[]> {
+  const now = new Date().toISOString();
+  const remote = await fetchStrapi<StrapiAfisha[]>('afishas', {
+    query:
+      `?filters[startsAt][$gte]=${encodeURIComponent(now)}` +
+      `&sort=startsAt:asc&pagination[limit]=${limit}&${AFISHA_POPULATE}`,
+  });
+  return remote?.map(mapAfisha) ?? [];
 }
 
 /* ──────────────── Sport ──────────────── */
@@ -232,7 +307,6 @@ export async function searchAll(qRaw: string): Promise<SearchHit[]> {
         title: e.title,
         subtitle: `${e.place} · ${new Date(e.startsAt).toLocaleDateString('ru-RU')}`,
         excerpt: e.description,
-        pattern: e.fallbackPattern,
       });
     }
   }

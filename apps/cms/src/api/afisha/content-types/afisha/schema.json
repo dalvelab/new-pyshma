@@ -1,0 +1,52 @@
+{
+  "kind": "collectionType",
+  "collectionName": "afishas",
+  "info": {
+    "singularName": "afisha",
+    "pluralName": "afishas",
+    "displayName": "Afisha",
+    "description": "Привязка показа к дате/локации/билету"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "slug": {
+      "type": "string",
+      "unique": true
+    },
+    "show": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "required": true,
+      "target": "api::show.show"
+    },
+    "location": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "required": true,
+      "target": "api::location.location"
+    },
+    "startsAt": {
+      "type": "datetime",
+      "required": true
+    },
+    "ticketUrl": {
+      "type": "string"
+    },
+    "free": {
+      "type": "boolean",
+      "default": false
+    },
+    "priceFrom": {
+      "type": "integer",
+      "min": 0
+    }
+  }
+}

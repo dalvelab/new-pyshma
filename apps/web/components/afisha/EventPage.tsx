@@ -1,6 +1,8 @@
+import Image from 'next/image';
+import { EventGallery } from '@/components/afisha/EventGallery';
 import { formatEventDate } from '@/components/home/format';
 import { Button } from '@/components/ui/Button';
-import { PatternBox } from '@/components/ui/PatternBox';
+import { Markdown } from '@/components/ui/Markdown';
 import { Pill } from '@/components/ui/Pill';
 import type { Event } from '@/lib/types';
 
@@ -12,17 +14,23 @@ export function EventPage({ event }: Props) {
   return (
     <article>
       <section className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr] gap-10 px-4 md:px-9 py-10 max-w-page mx-auto">
-        <PatternBox
-          className="h-[260px] sm:h-[360px] md:h-[460px]"
-          pattern={event.fallbackPattern ?? 'warm'}
-          label="постер"
-        />
+        <div className="relative h-[260px] sm:h-[360px] md:h-[460px] overflow-hidden">
+          <Image
+            src={event.cover.url}
+            alt={event.cover.alt ?? event.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 60vw"
+            className="object-cover"
+            priority
+          />
+        </div>
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap gap-2">
             <Pill>{formatEventDate(event.startsAt)}</Pill>
             <Pill variant={event.free ? 'accent' : 'light'}>
               {event.free ? 'бесплатно' : `от ${event.priceFrom} ₽`}
             </Pill>
+            {event.ageLimit !== undefined && <Pill variant="light">{event.ageLimit}+</Pill>}
           </div>
           <h1 className="m-0 font-extrabold text-[36px] sm:text-[48px] md:text-[60px] leading-[0.96] tracking-tighter2 text-balance">
             {event.title}
@@ -46,23 +54,24 @@ export function EventPage({ event }: Props) {
           {event.description && (
             <p className="m-0 text-base leading-relaxed text-ink-70">{event.description}</p>
           )}
-          {!event.free && (
+          {!event.free && event.ticketUrl && (
             <div className="mt-2">
-              <Button variant="primary">купить билет</Button>
+              <Button variant="primary" href={event.ticketUrl} external>
+                купить билет
+              </Button>
             </div>
           )}
         </div>
       </section>
 
-      {event.gallery && event.gallery.length > 0 && (
-        <section className="px-4 md:px-9 pb-10 max-w-page mx-auto">
-          <h2 className="m-0 mb-4 font-extrabold text-2xl tracking-tight">Галерея</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {event.gallery.map((p, i) => (
-              <PatternBox key={i} className="h-[180px]" pattern={p} />
-            ))}
-          </div>
+      {event.body && (
+        <section className="px-4 md:px-9 pb-10 max-w-[760px] mx-auto">
+          <Markdown>{event.body}</Markdown>
         </section>
+      )}
+
+      {event.gallery && event.gallery.length > 0 && (
+        <EventGallery items={event.gallery} title="Галерея" />
       )}
     </article>
   );

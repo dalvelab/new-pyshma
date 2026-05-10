@@ -1,8 +1,7 @@
 import { fetchStrapi } from '@/lib/strapi';
-import { getLatestNews, getLeadArticle } from '@/lib/queries';
-import { mockEvents, mockFestival, mockSport, mockVacancies } from '@/lib/mock';
+import { getLatestNews, getLeadArticle, getUpcomingEvents } from '@/lib/queries';
+import { mockFestival, mockSport, mockVacancies } from '@/lib/mock';
 import type {
-  Event,
   FestivalTeaser,
   SportSection as SportSectionT,
   Vacancy,
@@ -24,12 +23,10 @@ import { VacanciesSection } from '@/components/home/VacanciesSection';
 export const revalidate = 60;
 
 async function getHomeData() {
-  const [lead, news, eventsRes, sportRes, vacanciesRes, festRes] = await Promise.all([
+  const [lead, news, events, sportRes, vacanciesRes, festRes] = await Promise.all([
     getLeadArticle(),
     getLatestNews(4),
-    fetchStrapi<Event[]>('events', {
-      query: '?filters[startsAt][$gte]=now&sort=startsAt:asc&pagination[limit]=4&populate=*',
-    }),
+    getUpcomingEvents(4),
     fetchStrapi<SportSectionT[]>('sport-sections', { query: '?pagination[limit]=5' }),
     fetchStrapi<Vacancy[]>('vacancies', { query: '?sort=publishedAt:desc&pagination[limit]=5' }),
     fetchStrapi<FestivalTeaser>('festival-teaser'),
@@ -38,7 +35,7 @@ async function getHomeData() {
   return {
     lead,
     news,
-    events: eventsRes?.length ? eventsRes : mockEvents,
+    events,
     sport: (sportRes?.length ? sportRes : mockSport).slice(0, 5),
     vacancies: (vacanciesRes?.length ? vacanciesRes : mockVacancies).slice(0, 5),
     festival: festRes ?? mockFestival,

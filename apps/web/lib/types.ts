@@ -22,25 +22,25 @@ export interface Article {
 
 /* ───────── Events / Афиша ───────── */
 
-export type EventCategory = 'концерт' | 'лекция' | 'спорт' | 'выставка' | 'фестиваль' | 'другое';
-
 export interface Event {
   id: string;
   slug: string;
   title: string;
   startsAt: string; // ISO
-  endsAt?: string;
   place: string;
   address?: string;
-  category?: EventCategory;
   free: boolean;
   priceFrom?: number; // RUB
+  /** Короткое описание для карточки и шапки страницы */
   description?: string;
-  fallbackPattern?: Pattern;
-  /** Координаты для карты (широта, долгота) */
-  geo?: { lat: number; lng: number };
-  /** Дополнительные изображения для галереи */
-  gallery?: Pattern[];
+  /** Длинное описание (markdown) для страницы события */
+  body?: string;
+  cover: { url: string; alt?: string };
+  ageLimit?: number;
+  /** Ссылка на покупку билета */
+  ticketUrl?: string;
+  /** Дополнительные фото события (до 10) */
+  gallery?: { url: string; alt?: string }[];
 }
 
 /* ───────── Спорт ───────── */
