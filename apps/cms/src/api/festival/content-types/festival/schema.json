@@ -1,0 +1,52 @@
+{
+  "kind": "singleType",
+  "collectionName": "festivals",
+  "info": {
+    "singularName": "festival",
+    "pluralName": "festivals",
+    "displayName": "Festival",
+    "description": "Лендинг текущего фестиваля"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "date": {
+      "type": "string",
+      "required": true,
+      "maxLength": 60
+    },
+    "startsAt": {
+      "type": "datetime",
+      "required": true
+    },
+    "city": {
+      "type": "string",
+      "required": true
+    },
+    "intro": {
+      "type": "text",
+      "required": true
+    },
+    "marquee": {
+      "type": "string",
+      "maxLength": 280
+    },
+    "mapImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "poster": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "faq": {
+      "type": "component",
+      "repeatable": true,
+      "component": "festival.faq-item"
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "kind": "collectionType",
+  "collectionName": "festival_programs",
+  "info": {
+    "singularName": "festival-program",
+    "pluralName": "festival-programs",
+    "displayName": "Festival Program",
+    "description": "Программа фестиваля — отдельные пункты с площадкой и временем"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "slug": {
+      "type": "string",
+      "unique": true,
+      "maxLength": 280
+    },
+    "date": {
+      "type": "datetime",
+      "required": true
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["images"]
+    },
+    "body": {
+      "type": "richtext"
+    },
+    "location": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "required": true,
+      "target": "api::location.location"
+    }
+  }
+}

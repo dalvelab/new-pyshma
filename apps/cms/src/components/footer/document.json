@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_footer_documents",
+  "info": {
+    "displayName": "Document",
+    "icon": "file"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "maxLength": 120
+    },
+    "file": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": ["files"]
+    }
+  }
+}

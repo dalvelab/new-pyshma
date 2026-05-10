@@ -95,55 +95,59 @@ export interface Vacancy {
 /* ───────── Фестиваль ───────── */
 
 export interface FestivalTeaser {
-  date: string; // '12 мая'
-  weekday: string; // 'воскресенье'
-  ctaUrl: string;
+  date: string;
+  /** Бегущая строка под тизером — массив пунктов через запятую в админке */
+  marquee: string[];
 }
 
-export interface FestivalScene {
+export interface FestivalProgram {
   id: string;
-  name: string;
-  description?: string;
-}
-
-export interface FestivalActivity {
-  id: string;
-  startsAt: string; // ISO
-  endsAt?: string;
-  sceneId: string; // ссылка на FestivalScene.id
+  slug: string;
   title: string;
-  performer?: string;
-  category?: 'музыка' | 'лекция' | 'детям' | 'еда' | 'спорт' | 'мастер-класс';
+  date: string; // ISO datetime
+  cover: { url: string; alt?: string };
+  /** Markdown — описание для детальной страницы */
+  body?: string;
+  location: { name: string; address?: string };
 }
 
-export interface FestivalVenue {
-  id: string;
-  name: string;
-  description: string;
-  fallbackPattern?: Pattern;
-}
-
-export interface FestivalPastYear {
+export interface PastFestival {
   year: number;
   title: string; // короткий заголовок-итог
   lead?: string; // абзац-описание
   stats?: Array<{ v: string; l: string }>;
-  fallbackPattern?: Pattern;
+  image: { url: string; alt?: string };
 }
 
 export interface FestivalLanding {
   date: string;
   startsAt: string; // ISO datetime — момент старта для обратного отсчёта
-  weekday: string;
   city: string;
-  tagline: string;
   intro: string;
-  scenes: FestivalScene[];
-  activities: FestivalActivity[];
-  venues: FestivalVenue[];
-  partners: string[];
-  pastYears: FestivalPastYear[];
+  /** Картинка с картой площадок фестиваля */
+  mapImage?: { url: string; alt?: string };
+  /** Постер фестиваля для hero (4:5) */
+  poster?: { url: string; alt?: string };
   faq?: Array<{ q: string; a: string }>;
+}
+
+/* ───────── Footer ───────── */
+
+export type SocialPlatform = 'vk' | 'telegram' | 'max' | 'dzen';
+
+export interface SocialLink {
+  platform: SocialPlatform;
+  url: string;
+}
+
+export interface FooterDocument {
+  name: string;
+  url: string;
+}
+
+export interface FooterData {
+  documents: FooterDocument[];
+  socials: SocialLink[];
 }
 
 /* ───────── Поиск ───────── */

@@ -572,7 +572,123 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
         maxLength: 60;
       }>;
     publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiFestivalProgramFestivalProgram
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'festival_programs';
+  info: {
+    description: '\u041F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0430 \u0444\u0435\u0441\u0442\u0438\u0432\u0430\u043B\u044F \u2014 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0435 \u043F\u0443\u043D\u043A\u0442\u044B \u0441 \u043F\u043B\u043E\u0449\u0430\u0434\u043A\u043E\u0439 \u0438 \u0432\u0440\u0435\u043C\u0435\u043D\u0435\u043C';
+    displayName: 'Festival Program';
+    pluralName: 'festival-programs';
+    singularName: 'festival-program';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    body: Schema.Attribute.RichText;
+    cover: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::festival-program.festival-program'
+    > &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.Relation<'manyToOne', 'api::location.location'> &
+      Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 280;
+      }>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiFestivalFestival extends Struct.SingleTypeSchema {
+  collectionName: 'festivals';
+  info: {
+    description: '\u041B\u0435\u043D\u0434\u0438\u043D\u0433 \u0442\u0435\u043A\u0443\u0449\u0435\u0433\u043E \u0444\u0435\u0441\u0442\u0438\u0432\u0430\u043B\u044F';
+    displayName: 'Festival';
+    pluralName: 'festivals';
+    singularName: 'festival';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    city: Schema.Attribute.String & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    date: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+    faq: Schema.Attribute.Component<'festival.faq-item', true>;
+    intro: Schema.Attribute.Text & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::festival.festival'
+    > &
+      Schema.Attribute.Private;
+    mapImage: Schema.Attribute.Media<'images'>;
+    marquee: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 280;
+      }>;
+    poster: Schema.Attribute.Media<'images'>;
+    publishedAt: Schema.Attribute.DateTime;
+    startsAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiFooterFooter extends Struct.SingleTypeSchema {
+  collectionName: 'footers';
+  info: {
+    description: '\u041F\u043E\u0434\u0432\u0430\u043B \u0441\u0430\u0439\u0442\u0430 \u2014 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442\u044B \u0438 \u0441\u043E\u0446\u0441\u0435\u0442\u0438';
+    displayName: 'Footer';
+    pluralName: 'footers';
+    singularName: 'footer';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    documents: Schema.Attribute.Component<'footer.document', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::footer.footer'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    socials: Schema.Attribute.Component<'footer.social', true>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -607,6 +723,49 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPastFestivalPastFestival
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'past_festivals';
+  info: {
+    description: '\u0410\u0440\u0445\u0438\u0432 \u043F\u0440\u043E\u0448\u0435\u0434\u0448\u0438\u0445 \u0444\u0435\u0441\u0442\u0438\u0432\u0430\u043B\u0435\u0439';
+    displayName: 'Past Festival';
+    pluralName: 'past-festivals';
+    singularName: 'past-festival';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    gallery: Schema.Attribute.Media<'files' | 'images', true>;
+    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
+    lead: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::past-festival.past-festival'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    stats: Schema.Attribute.Component<'festival.stat-item', true>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    year: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1900;
+        },
+        number
+      >;
   };
 }
 
@@ -778,7 +937,6 @@ export interface ApiVacancyCategoryVacancyCategory
         maxLength: 60;
       }>;
     publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1366,7 +1524,11 @@ declare module '@strapi/strapi' {
       'api::afisha.afisha': ApiAfishaAfisha;
       'api::article.article': ApiArticleArticle;
       'api::category.category': ApiCategoryCategory;
+      'api::festival-program.festival-program': ApiFestivalProgramFestivalProgram;
+      'api::festival.festival': ApiFestivalFestival;
+      'api::footer.footer': ApiFooterFooter;
       'api::location.location': ApiLocationLocation;
+      'api::past-festival.past-festival': ApiPastFestivalPastFestival;
       'api::show.show': ApiShowShow;
       'api::sport-category.sport-category': ApiSportCategorySportCategory;
       'api::sport.sport': ApiSportSport;

@@ -1,6 +1,11 @@
 import Link from 'next/link';
+import { SocialIcon } from '@/components/ui/SocialIcon';
+import { getFooter } from '@/lib/queries';
 
-export function SiteFooter() {
+export async function SiteFooter() {
+  const footer = await getFooter();
+  const socials = footer?.socials ?? [];
+
   return (
     <footer className="border-t-1.5 border-ink bg-ink text-paper">
       <div className="grid grid-cols-1 md:grid-cols-[1.4fr_1fr_1fr] gap-7 px-4 md:px-9 py-10 max-w-page mx-auto">
@@ -22,35 +27,42 @@ export function SiteFooter() {
             ООО «ШИП-Медиа» · ИНН 0000000000 · ОГРН 0000000000000
           </p>
         </div>
-        <div className="flex flex-col gap-2.5">
-          <div className="text-[11px] text-paper/55 uppercase tracking-[0.1em]">соцсети</div>
-          <div className="flex gap-2 flex-wrap">
-            {['ВК', 'TG', 'Max', 'Дзен'].map((s) => (
+
+        {socials.length > 0 && (
+          <div className="flex flex-col gap-2.5">
+            <div className="text-[11px] text-paper/55 uppercase tracking-[0.1em]">соцсети</div>
+            <div className="flex gap-2 flex-wrap">
+              {socials.map((s) => (
+                <a
+                  key={s.platform}
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-[38px] h-[38px] rounded-full border-1.5 border-paper/40 inline-flex items-center justify-center text-paper hover:border-paper transition-colors"
+                >
+                  <SocialIcon platform={s.platform} />
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {footer?.documents.length ? (
+          <div className="flex flex-col gap-2">
+            <div className="text-[11px] text-paper/55 uppercase tracking-[0.1em]">документы</div>
+            {footer.documents.map((d) => (
               <a
-                key={s}
-                href="#"
-                className="w-[38px] h-[38px] rounded-full border-1.5 border-paper/40 inline-flex items-center justify-center text-[11px]"
+                key={d.url}
+                href={d.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs md:text-sm text-paper border-b border-paper/40 self-start"
               >
-                {s}
+                {d.name}
               </a>
             ))}
           </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <div className="text-[11px] text-paper/55 uppercase tracking-[0.1em]">документы</div>
-          <a
-            href="/legal/terms"
-            className="text-xs md:text-sm text-paper border-b border-paper/40 self-start"
-          >
-            Пользовательское соглашение
-          </a>
-          <a
-            href="/legal/privacy"
-            className="text-xs md:text-sm text-paper border-b border-paper/40 self-start"
-          >
-            Политика конфиденциальности
-          </a>
-        </div>
+        ) : null}
       </div>
     </footer>
   );

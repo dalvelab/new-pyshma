@@ -1,15 +1,29 @@
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { PatternBox } from '@/components/ui/PatternBox';
-import type { FestivalLanding } from '@/lib/types';
+import type { FestivalLanding, FestivalProgram, PastFestival } from '@/lib/types';
 import { FestivalCountdown } from './FestivalCountdown';
 import { ProgramTabs } from './ProgramTabs';
 
 interface Props {
   data: FestivalLanding;
+  pastYears: PastFestival[];
+  programs: FestivalProgram[];
 }
 
-export function FestivalLandingView({ data }: Props) {
+function pluralDays(n: number): string {
+  const abs = n % 100;
+  if (abs > 10 && abs < 20) return 'дней';
+  const n1 = n % 10;
+  if (n1 === 1) return 'день';
+  if (n1 >= 2 && n1 <= 4) return 'дня';
+  return 'дней';
+}
+
+export function FestivalLandingView({ data, pastYears, programs }: Props) {
+  const msLeft = new Date(data.startsAt).getTime() - Date.now();
+  const daysLeft = msLeft > 0 ? Math.ceil(msLeft / 86_400_000) : 0;
+
   return (
     <article>
       {/* HERO — editorial poster on dark */}
@@ -22,7 +36,7 @@ export function FestivalLandingView({ data }: Props) {
                 фестиваль · 3-й сезон
               </span>
               <span className="font-bold text-[11px] tracking-[0.22em] uppercase text-paper/60 self-center">
-                {data.date} · {data.weekday}
+                {data.date}
               </span>
             </div>
 
@@ -55,38 +69,26 @@ export function FestivalLandingView({ data }: Props) {
 
           {/* Right — meta card */}
           <div className="flex flex-col gap-3.5 self-end">
-            <div
-              className="aspect-[4/5] rounded-xl overflow-hidden border-1.5 border-cream relative"
-              style={{
-                background: 'linear-gradient(135deg, rgb(250,80,35) 0%, #f3a36a 55%, #1a1612 100%)',
-              }}
-            >
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    'radial-gradient(circle at 30% 70%, rgba(255,255,255,0.18), transparent 50%)',
-                }}
+            <div className="aspect-[4/5] rounded-xl overflow-hidden border-1.5 border-cream relative">
+              <Image
+                src={data.poster?.url ?? '/festival-poster.png'}
+                alt={data.poster?.alt ?? 'Постер фестиваля'}
+                fill
+                sizes="(max-width: 1024px) 100vw, 400px"
+                className="object-cover"
+                priority
               />
-              <div className="absolute left-[18px] top-[18px] font-bold text-[11px] text-cream tracking-[0.18em] uppercase px-2.5 py-1 border-1.5 border-cream rounded-full">
-                постер
-              </div>
-              <div className="absolute left-[18px] sm:left-[22px] bottom-[18px] sm:bottom-[22px] text-cream font-extrabold text-[28px] sm:text-[38px] leading-[0.95] tracking-tighter2">
-                {data.date}
-              </div>
             </div>
 
             <div className="grid grid-cols-2 border-1.5 border-cream rounded-xl overflow-hidden">
               {[
-                { l: 'дата', v: data.date, sub: data.weekday },
+                { l: 'дата', v: data.date, sub: '' },
                 { l: 'место', v: 'Площадь', sub: data.city },
                 { l: 'вход', v: 'свободный', sub: 'без билетов' },
                 {
-                  l: 'сцены',
-                  v: `${data.scenes.length}`,
-                  sub:
-                    data.scenes.map((s) => s.name.replace(/^Главная|Вторая/, '')).join(', ') ||
-                    'main, second',
+                  l: 'программа',
+                  v: `${programs.length}`,
+                  sub: programs.length === 1 ? 'событие' : 'событий',
                 },
               ].map((x, i) => (
                 <div
@@ -111,75 +113,59 @@ export function FestivalLandingView({ data }: Props) {
       <FestivalCountdown startsAt={data.startsAt} />
 
       {/* PROGRAM */}
-      <section id="program" className="px-4 md:px-9 py-12 max-w-page mx-auto">
-        <SectionHeader title="Программа дня" />
-        <ProgramTabs scenes={data.scenes} activities={data.activities} />
-      </section>
+      {programs.length > 0 && (
+        <section id="program" className="px-4 md:px-9 py-12 max-w-page mx-auto">
+          <SectionHeader title="Программа" />
+          <ProgramTabs items={programs} />
+        </section>
+      )}
 
-      {/* VENUES — single big map photo */}
-      <section id="venues" className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-paper-2">
-        <div className="max-w-page mx-auto">
-          <SectionHeader title="Карта · площадки" />
-          <div
-            className="relative aspect-[16/8] border-1.5 border-ink rounded-xl overflow-hidden"
-            style={{
-              background: `
-                linear-gradient(rgba(216,207,192,1) 1px, transparent 1px) 0 0 / 100% 48px,
-                linear-gradient(90deg, rgba(216,207,192,1) 1px, transparent 1px) 0 0 / 48px 100%,
-                #fbf8f0
-              `,
-            }}
-          >
-            <div
-              className="absolute left-0 bottom-0 w-[55%] h-[38%] border-t-1.5"
-              style={{
-                background:
-                  'repeating-linear-gradient(45deg, rgba(80,140,200,0.18) 0 6px, transparent 6px 12px), rgba(80,140,200,0.1)',
-                borderColor: 'rgba(216,207,192,1)',
-              }}
-            />
-            <div
-              className="absolute right-[5%] top-[8%] w-[36%] h-[38%]"
-              style={{
-                background:
-                  'radial-gradient(circle at 40% 40%, rgba(80,160,90,0.22) 0 50%, transparent 60%)',
-              }}
-            />
-            <div className="absolute left-[22px] bottom-[18px] font-bold text-xs tracking-[0.18em] uppercase text-ink-50">
-              Пышминский пруд
-            </div>
-            <div className="absolute right-[18px] top-[18px] px-3 py-2 rounded-md bg-cream border-1.5 border-ink font-bold text-[11px] tracking-[0.14em] uppercase">
-              фото · карта фестиваля
+      {/* VENUES — карта площадок */}
+      {data.mapImage && (
+        <section id="venues" className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-paper-2">
+          <div className="max-w-page mx-auto">
+            <SectionHeader title="Карта · площадки" />
+            <div className="relative aspect-[16/8] border-1.5 border-ink rounded-xl overflow-hidden">
+              <Image
+                src={data.mapImage.url}
+                alt={data.mapImage.alt ?? 'Карта фестиваля'}
+                fill
+                sizes="(max-width: 1280px) 100vw, 1280px"
+                className="object-cover"
+              />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* PAST YEARS */}
+      {pastYears.length > 0 && (
       <section id="past" className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-cream">
         <div className="max-w-page mx-auto">
           <SectionHeader
-            title={`Архив · ${data.pastYears.length} ${data.pastYears.length === 1 ? 'сезон' : 'сезона'}`}
+            title={`Архив · ${pastYears.length} ${pastYears.length === 1 ? 'сезон' : 'сезона'}`}
           />
           <h2 className="m-0 mb-7 font-extrabold text-[32px] sm:text-[44px] md:text-[64px] leading-[0.95] tracking-tighter2">
             Как это было
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[22px]">
-            {data.pastYears.map((y) => (
+            {pastYears.map((y) => (
               <Card key={y.year} className="flex flex-col h-full overflow-hidden">
-                <div className="relative">
-                  <PatternBox
-                    className="h-[200px] sm:h-[280px]"
-                    pattern={y.fallbackPattern ?? 'cross'}
-                    rounded={false}
+                <div className="relative h-[200px] sm:h-[280px] overflow-hidden">
+                  <Image
+                    src={y.image.url}
+                    alt={y.image.alt ?? `${y.year}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
                   />
                   <div
-                    className="absolute left-[18px] top-[18px] font-extrabold text-[64px] sm:text-[96px] leading-[0.85] tracking-tighter2 text-cream"
+                    className="absolute left-[18px] top-[18px] font-extrabold text-[64px] sm:text-[96px] leading-[0.85] tracking-tighter2 text-cream z-10"
                     style={{ textShadow: '2px 2px 0 #181412' }}
                   >
                     {y.year}
                   </div>
-                  <div className="absolute right-[18px] top-[18px] px-3 py-1.5 rounded-full bg-cream border-1.5 border-ink font-bold text-[11px] tracking-[0.18em] uppercase">
+                  <div className="absolute right-[18px] top-[18px] px-3 py-1.5 rounded-full bg-cream border-1.5 border-ink font-bold text-[11px] tracking-[0.18em] uppercase z-10">
                     сезон
                   </div>
                 </div>
@@ -214,6 +200,7 @@ export function FestivalLandingView({ data }: Props) {
           </div>
         </div>
       </section>
+      )}
 
       {/* FAQ + CTA */}
       {data.faq && data.faq.length > 0 && (
@@ -255,14 +242,25 @@ export function FestivalLandingView({ data }: Props) {
                   будь рядом
                 </div>
                 <div className="font-extrabold text-[36px] leading-[0.98] tracking-tighter2">
-                  До&nbsp;фестиваля
-                  <br />
-                  16 дней.
-                  <br />
+                  {daysLeft > 0 ? (
+                    <>
+                      До&nbsp;фестиваля
+                      <br />
+                      {daysLeft}&nbsp;{pluralDays(daysLeft)}.
+                      <br />
+                    </>
+                  ) : (
+                    <>
+                      Фестиваль
+                      <br />
+                      уже начался.
+                      <br />
+                    </>
+                  )}
                   <span className="text-accent">Не пропустите.</span>
                 </div>
                 <div className="mt-4 font-medium text-sm leading-relaxed text-paper/70">
-                  Подпишитесь, чтобы первыми узнавать про лайн-ап, перенос площадок и афтепати.
+                  Подпишитесь, чтобы первыми узнавать про лайн-ап, перенос площадок и другие новости.
                 </div>
               </div>
               <div className="relative flex flex-col gap-2.5">

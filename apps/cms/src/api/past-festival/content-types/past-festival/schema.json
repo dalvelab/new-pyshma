@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "past_festivals",
+  "info": {
+    "singularName": "past-festival",
+    "pluralName": "past-festivals",
+    "displayName": "Past Festival",
+    "description": "Архив прошедших фестивалей"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "year": {
+      "type": "integer",
+      "required": true,
+      "unique": true,
+      "min": 1900
+    },
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "lead": {
+      "type": "text"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "stats": {
+      "type": "component",
+      "component": "festival.stat-item",
+      "repeatable": true
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "files",
+        "images"
+      ]
+    }
+  }
+}

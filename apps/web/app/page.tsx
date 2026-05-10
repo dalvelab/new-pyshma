@@ -1,13 +1,11 @@
-import { fetchStrapi } from '@/lib/strapi';
 import {
+  getFestivalTeaser,
   getLatestNews,
   getLatestSport,
   getLatestVacancies,
   getLeadArticle,
   getUpcomingEvents,
 } from '@/lib/queries';
-import { mockFestival } from '@/lib/mock';
-import type { FestivalTeaser } from '@/lib/types';
 
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
@@ -25,23 +23,16 @@ import { VacanciesSection } from '@/components/home/VacanciesSection';
 export const revalidate = 60;
 
 async function getHomeData() {
-  const [lead, news, events, sport, vacancies, festRes] = await Promise.all([
+  const [lead, news, events, sport, vacancies, festival] = await Promise.all([
     getLeadArticle(),
     getLatestNews(4),
     getUpcomingEvents(4),
     getLatestSport(5),
     getLatestVacancies(5),
-    fetchStrapi<FestivalTeaser>('festival-teaser'),
+    getFestivalTeaser(),
   ]);
 
-  return {
-    lead,
-    news,
-    events,
-    sport,
-    vacancies,
-    festival: festRes ?? mockFestival,
-  };
+  return { lead, news, events, sport, vacancies, festival };
 }
 
 export default async function HomePage() {
@@ -55,7 +46,7 @@ export default async function HomePage() {
         {data.lead && <LeadStory lead={data.lead} />}
         <NewsGrid items={data.news} />
         <AfishaRow items={data.events} />
-        <FestTeaser teaser={data.festival} />
+        {data.festival && <FestTeaser teaser={data.festival} />}
         <section className="px-4 md:px-9 py-9 border-b-1.5 border-ink max-w-page mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-9">
             <SportSection items={data.sport} />

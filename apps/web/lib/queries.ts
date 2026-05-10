@@ -1,4 +1,3 @@
-import { mockFestivalLanding } from './mock';
 import {
   absoluteMediaUrl,
   fetchStrapi,
@@ -6,7 +5,19 @@ import {
   type StrapiEntry,
   type StrapiMedia,
 } from './strapi';
-import type { Article, Event, FestivalLanding, SearchHit, Sport, Vacancy } from './types';
+import type {
+  Article,
+  Event,
+  FestivalLanding,
+  FestivalProgram,
+  FestivalTeaser,
+  FooterData,
+  PastFestival,
+  SearchHit,
+  SocialPlatform,
+  Sport,
+  Vacancy,
+} from './types';
 
 /* ──────────────── News ──────────────── */
 
@@ -400,9 +411,178 @@ export async function getAllVacancyCategories(): Promise<string[]> {
 
 /* ──────────────── Festival landing ──────────────── */
 
-export async function getFestivalLanding(): Promise<FestivalLanding> {
-  const remote = await fetchStrapi<FestivalLanding>('festival-landing', { query: '?populate=*' });
-  return remote ?? mockFestivalLanding;
+interface StrapiFestivalStat {
+  id: number;
+  value: string;
+  label: string;
+}
+
+interface StrapiFestivalFaq {
+  id: number;
+  question: string;
+  answer: string;
+}
+
+interface StrapiFestival extends StrapiEntry {
+  date: string;
+  startsAt: string;
+  city: string;
+  intro: string;
+  marquee?: string | null;
+  mapImage?: StrapiMedia | null;
+  poster?: StrapiMedia | null;
+  faq?: StrapiFestivalFaq[] | null;
+}
+
+const FESTIVAL_POPULATE =
+  'populate[faq]=true&populate[mapImage]=true&populate[poster]=true';
+
+function mapFestival(entry: StrapiFestival): FestivalLanding {
+  return {
+    date: entry.date,
+    startsAt: entry.startsAt,
+    city: entry.city,
+    intro: entry.intro,
+    mapImage: entry.mapImage
+      ? {
+          url: absoluteMediaUrl(entry.mapImage.url) ?? '',
+          alt: entry.mapImage.alternativeText ?? 'Карта фестиваля',
+        }
+      : undefined,
+    poster: entry.poster
+      ? {
+          url: absoluteMediaUrl(entry.poster.url) ?? '',
+          alt: entry.poster.alternativeText ?? 'Постер фестиваля',
+        }
+      : undefined,
+    faq: entry.faq?.map((f) => ({ q: f.question, a: f.answer })) ?? undefined,
+  };
+}
+
+export async function getFestival(): Promise<FestivalLanding | null> {
+  const remote = await fetchStrapi<StrapiFestival>('festival', { query: `?${FESTIVAL_POPULATE}` });
+  return remote ? mapFestival(remote) : null;
+}
+
+interface StrapiPastFestival extends StrapiEntry {
+  year: number;
+  title: string;
+  lead?: string | null;
+  image?: StrapiMedia | null;
+  stats?: StrapiFestivalStat[] | null;
+}
+
+export async function getPastFestivals(): Promise<PastFestival[]> {
+  const remote = await fetchStrapi<StrapiPastFestival[]>('past-festivals', {
+    query:
+      '?sort=year:desc&pagination[limit]=50' +
+      '&populate[image]=true&populate[stats]=true',
+  });
+  return (
+    remote?.map((y) => ({
+      year: y.year,
+      title: y.title,
+      lead: y.lead ?? undefined,
+      image: {
+        url: absoluteMediaUrl(y.image?.url) ?? '',
+        alt: y.image?.alternativeText ?? `${y.year}`,
+      },
+      stats: y.stats?.map((s) => ({ v: s.value, l: s.label })),
+    })) ?? []
+  );
+}
+
+/** Лёгкий тизер для главной — дата + бегущая строка. */
+export async function getFestivalTeaser(): Promise<FestivalTeaser | null> {
+  const remote = await fetchStrapi<StrapiFestival>('festival', {
+    query: '?fields[0]=date&fields[1]=marquee',
+  });
+  if (!remote) return null;
+  const marquee = (remote.marquee ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return { date: remote.date, marquee };
+}
+
+/* ──────────────── Festival programs ──────────────── */
+
+interface StrapiFestivalProgram extends StrapiEntry {
+  title: string;
+  slug: string;
+  date: string;
+  body?: string | null;
+  cover?: StrapiMedia | null;
+  location?: StrapiLocation | null;
+}
+
+const PROGRAM_POPULATE = 'populate[cover]=true&populate[location]=true';
+
+function mapFestivalProgram(entry: StrapiFestivalProgram): FestivalProgram {
+  return {
+    id: String(entry.id),
+    slug: entry.slug,
+    title: entry.title,
+    date: entry.date,
+    cover: {
+      url: absoluteMediaUrl(entry.cover?.url) ?? '',
+      alt: entry.cover?.alternativeText ?? entry.title,
+    },
+    body: entry.body ?? undefined,
+    location: {
+      name: entry.location?.name ?? '',
+      address: entry.location?.address ?? undefined,
+    },
+  };
+}
+
+export async function getFestivalPrograms(): Promise<FestivalProgram[]> {
+  const remote = await fetchStrapi<StrapiFestivalProgram[]>('festival-programs', {
+    query: `?sort=date:asc&pagination[limit]=200&${PROGRAM_POPULATE}`,
+  });
+  return remote?.map(mapFestivalProgram) ?? [];
+}
+
+export async function getFestivalProgramBySlug(slug: string): Promise<FestivalProgram | null> {
+  const remote = await fetchStrapi<StrapiFestivalProgram[]>('festival-programs', {
+    query: `?filters[slug][$eq]=${encodeURIComponent(slug)}&${PROGRAM_POPULATE}`,
+  });
+  return remote?.[0] ? mapFestivalProgram(remote[0]) : null;
+}
+
+/* ──────────────── Footer ──────────────── */
+
+interface StrapiFooterDocument {
+  id: number;
+  name: string;
+  file?: StrapiMedia | null;
+}
+
+interface StrapiFooterSocial {
+  id: number;
+  platform: SocialPlatform;
+  url: string;
+}
+
+interface StrapiFooter extends StrapiEntry {
+  documents?: StrapiFooterDocument[] | null;
+  socials?: StrapiFooterSocial[] | null;
+}
+
+const FOOTER_POPULATE =
+  'populate[documents][populate][file]=true&populate[socials]=true';
+
+export async function getFooter(): Promise<FooterData | null> {
+  const remote = await fetchStrapi<StrapiFooter>('footer', {
+    query: `?${FOOTER_POPULATE}`,
+  });
+  if (!remote) return null;
+  return {
+    documents: (remote.documents ?? [])
+      .map((d) => ({ name: d.name, url: absoluteMediaUrl(d.file?.url) ?? '' }))
+      .filter((d) => d.url),
+    socials: (remote.socials ?? []).map((s) => ({ platform: s.platform, url: s.url })),
+  };
 }
 
 /* ──────────────── Search ──────────────── */

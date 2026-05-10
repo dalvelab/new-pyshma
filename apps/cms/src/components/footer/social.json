@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_footer_socials",
+  "info": {
+    "displayName": "Social Link",
+    "icon": "link"
+  },
+  "options": {},
+  "attributes": {
+    "platform": {
+      "type": "enumeration",
+      "enum": ["vk", "telegram", "max", "dzen"],
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    }
+  }
+}
