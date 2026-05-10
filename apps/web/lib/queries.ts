@@ -140,13 +140,6 @@ export async function getAllCategories(): Promise<string[]> {
   return remote?.map((c) => c.name) ?? [];
 }
 
-export async function getRelatedNews(article: Article, max = 3): Promise<Article[]> {
-  const all = await getAllNews();
-  return all
-    .filter((a) => a.slug !== article.slug && a.category === article.category)
-    .slice(0, max);
-}
-
 /* ──────────────── Events / Афиша ────────────────
    Источник правды — Strapi Afisha (привязка показа к локации/билету).
    Show хранит сам контент (постер, описание), Location — площадку. */
@@ -387,6 +380,25 @@ export async function getAllVacancies(): Promise<Vacancy[]> {
 export async function getLatestVacancies(limit = 5): Promise<Vacancy[]> {
   const remote = await fetchStrapi<StrapiVacancy[]>('vacancies', {
     query: `?sort=createdAt:desc&pagination[limit]=${limit}&${VACANCY_POPULATE}`,
+  });
+  return remote?.map(mapVacancy) ?? [];
+}
+
+/** Похожие вакансии: тот же `category`, без текущей; фильтр на стороне Strapi. */
+export async function getSimilarVacancies(args: {
+  category?: string;
+  excludeSlug: string;
+  limit?: number;
+}): Promise<Vacancy[]> {
+  const { category, excludeSlug, limit = 3 } = args;
+  const parts = [`filters[slug][$ne]=${encodeURIComponent(excludeSlug)}`];
+  if (category) parts.push(`filters[category][name][$eq]=${encodeURIComponent(category)}`);
+  parts.push(`pagination[limit]=${limit}`);
+  parts.push('sort=createdAt:desc');
+  // Тонкий populate: для карточки нужно лишь имя категории.
+  parts.push('populate[category]=true');
+  const remote = await fetchStrapi<StrapiVacancy[]>('vacancies', {
+    query: `?${parts.join('&')}`,
   });
   return remote?.map(mapVacancy) ?? [];
 }

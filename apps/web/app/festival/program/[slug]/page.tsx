@@ -1,8 +1,10 @@
+import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { Markdown } from '@/components/ui/Markdown';
+import { buildMetadata } from '@/lib/metadata';
 import { getFestivalProgramBySlug, getFestivalPrograms } from '@/lib/queries';
 
 export const revalidate = 60;
@@ -10,6 +12,21 @@ export const revalidate = 60;
 export async function generateStaticParams() {
   const all = await getFestivalPrograms();
   return all.map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const program = await getFestivalProgramBySlug(params.slug);
+  if (!program) return {};
+  return buildMetadata({
+    title: program.title,
+    description: program.body?.slice(0, 200) ?? program.location.name,
+    imageUrl: program.cover.url,
+    imageAlt: program.cover.alt ?? program.title,
+  });
 }
 
 export default async function FestivalProgramRoute({

@@ -9,15 +9,27 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+const SITE_NAME = 'Это Новая Пышма';
+
 export const metadata: Metadata = {
-  title: 'Это Новая Пышма — городской медиа-портал',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} — городской медиа-портал`,
+    template: `%s · ${SITE_NAME}`,
+  },
   description:
     'Новости, афиша, спорт, вакансии и фестиваль Верхней Пышмы. Что происходит, где собираться, чем заняться.',
   openGraph: {
-    title: 'Это Новая Пышма',
+    siteName: SITE_NAME,
+    title: SITE_NAME,
     description: 'Городской медиа-портал Верхней Пышмы.',
     locale: 'ru_RU',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SITE_NAME,
   },
 };
 
