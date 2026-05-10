@@ -8,7 +8,7 @@
     "description": "Новости портала"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
