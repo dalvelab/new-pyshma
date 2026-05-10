@@ -658,6 +658,10 @@ export interface ApiFestivalFestival extends Struct.SingleTypeSchema {
       }>;
     poster: Schema.Attribute.Media<'images'>;
     publishedAt: Schema.Attribute.DateTime;
+    seasonLabel: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
     startsAt: Schema.Attribute.DateTime & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

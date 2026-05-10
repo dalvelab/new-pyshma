@@ -29,6 +29,10 @@
       "type": "text",
       "required": true
     },
+    "seasonLabel": {
+      "type": "string",
+      "maxLength": 60
+    },
     "marquee": {
       "type": "string",
       "maxLength": 280

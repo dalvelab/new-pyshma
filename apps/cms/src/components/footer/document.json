@@ -1,8 +1,7 @@
 {
   "collectionName": "components_footer_documents",
   "info": {
-    "displayName": "Document",
-    "icon": "file"
+    "displayName": "Document"
   },
   "options": {},
   "attributes": {

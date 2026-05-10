@@ -124,6 +124,8 @@ export interface FestivalLanding {
   startsAt: string; // ISO datetime — момент старта для обратного отсчёта
   city: string;
   intro: string;
+  /** Подпись сезона в hero, например «3-й сезон» */
+  seasonLabel?: string;
   /** Картинка с картой площадок фестиваля */
   mapImage?: { url: string; alt?: string };
   /** Постер фестиваля для hero (4:5) */

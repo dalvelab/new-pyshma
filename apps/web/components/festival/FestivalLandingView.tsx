@@ -33,7 +33,7 @@ export function FestivalLandingView({ data, pastYears, programs }: Props) {
           <div>
             <div className="flex flex-wrap gap-2.5 mb-6">
               <span className="font-bold text-[11px] tracking-[0.22em] uppercase px-3 py-1.5 border-1.5 border-cream rounded-full">
-                фестиваль · 3-й сезон
+                фестиваль{data.seasonLabel ? ` · ${data.seasonLabel}` : ''}
               </span>
               <span className="font-bold text-[11px] tracking-[0.22em] uppercase text-paper/60 self-center">
                 {data.date}

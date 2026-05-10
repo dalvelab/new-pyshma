@@ -440,6 +440,7 @@ interface StrapiFestival extends StrapiEntry {
   startsAt: string;
   city: string;
   intro: string;
+  seasonLabel?: string | null;
   marquee?: string | null;
   mapImage?: StrapiMedia | null;
   poster?: StrapiMedia | null;
@@ -455,6 +456,7 @@ function mapFestival(entry: StrapiFestival): FestivalLanding {
     startsAt: entry.startsAt,
     city: entry.city,
     intro: entry.intro,
+    seasonLabel: entry.seasonLabel ?? undefined,
     mapImage: entry.mapImage
       ? {
           url: absoluteMediaUrl(entry.mapImage.url) ?? '',

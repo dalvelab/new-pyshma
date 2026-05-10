@@ -55,7 +55,6 @@ export interface FooterDocument extends Struct.ComponentSchema {
   collectionName: 'components_footer_documents';
   info: {
     displayName: 'Document';
-    icon: 'file';
   };
   attributes: {
     file: Schema.Attribute.Media<'files'> & Schema.Attribute.Required;
@@ -71,7 +70,6 @@ export interface FooterSocial extends Struct.ComponentSchema {
   collectionName: 'components_footer_socials';
   info: {
     displayName: 'Social Link';
-    icon: 'link';
   };
   attributes: {
     platform: Schema.Attribute.Enumeration<['vk', 'telegram', 'max', 'dzen']> &

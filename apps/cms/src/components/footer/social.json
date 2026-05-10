@@ -1,8 +1,7 @@
 {
   "collectionName": "components_footer_socials",
   "info": {
-    "displayName": "Social Link",
-    "icon": "link"
+    "displayName": "Social Link"
   },
   "options": {},
   "attributes": {
