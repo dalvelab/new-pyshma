@@ -654,6 +654,101 @@ export interface ApiShowShow extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiSportCategorySportCategory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'sport_categories';
+  info: {
+    description: '\u0413\u0440\u0443\u043F\u043F\u0438\u0440\u043E\u0432\u043A\u0430 \u0441\u043F\u043E\u0440\u0442\u0438\u0432\u043D\u044B\u0445 \u0441\u0435\u043A\u0446\u0438\u0439';
+    displayName: 'Sport Category';
+    pluralName: 'sport-categories';
+    singularName: 'sport-category';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sport-category.sport-category'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSportSport extends Struct.CollectionTypeSchema {
+  collectionName: 'sports';
+  info: {
+    description: '\u0421\u043F\u043E\u0440\u0442\u0438\u0432\u043D\u044B\u0435 \u0441\u0435\u043A\u0446\u0438\u0438 \u0438 \u043A\u0440\u0443\u0436\u043A\u0438';
+    displayName: 'Sport';
+    pluralName: 'sports';
+    singularName: 'sport';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    age: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+    category: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::sport-category.sport-category'
+    >;
+    contact: Schema.Attribute.Component<'common.contact', false>;
+    cover: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 600;
+      }>;
+    gallery: Schema.Attribute.Media<'images', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::sport.sport'> &
+      Schema.Attribute.Private;
+    location: Schema.Attribute.Relation<'manyToOne', 'api::location.location'> &
+      Schema.Attribute.Required;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    schedule: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+    scheduleDetailed: Schema.Attribute.RichText;
+    slug: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 280;
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiVacancyCategoryVacancyCategory
   extends Struct.CollectionTypeSchema {
   collectionName: 'vacancy_categories';
@@ -1273,6 +1368,8 @@ declare module '@strapi/strapi' {
       'api::category.category': ApiCategoryCategory;
       'api::location.location': ApiLocationLocation;
       'api::show.show': ApiShowShow;
+      'api::sport-category.sport-category': ApiSportCategorySportCategory;
+      'api::sport.sport': ApiSportSport;
       'api::vacancy-category.vacancy-category': ApiVacancyCategoryVacancyCategory;
       'api::vacancy.vacancy': ApiVacancyVacancy;
       'plugin::content-releases.release': PluginContentReleasesRelease;

@@ -8,7 +8,8 @@ interface Props {
   title: string;
 }
 
-export function EventGallery({ items, title }: Props) {
+/** Горизонтальный слайдер с фото. Свайп на тач, стрелки на десктопе при ≥3 фото. */
+export function MediaGallery({ items, title }: Props) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);

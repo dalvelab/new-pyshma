@@ -14,6 +14,9 @@
     },
     "telegram": {
       "type": "string"
+    },
+    "vk": {
+      "type": "string"
     }
   }
 }

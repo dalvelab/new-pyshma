@@ -1,4 +1,4 @@
-import { mockFestivalLanding, mockSport } from './mock';
+import { mockFestivalLanding } from './mock';
 import {
   absoluteMediaUrl,
   fetchStrapi,
@@ -6,7 +6,7 @@ import {
   type StrapiEntry,
   type StrapiMedia,
 } from './strapi';
-import type { Article, Event, FestivalLanding, SearchHit, SportSection, Vacancy } from './types';
+import type { Article, Event, FestivalLanding, SearchHit, Sport, Vacancy } from './types';
 
 /* ──────────────── News ──────────────── */
 
@@ -120,7 +120,6 @@ export async function getNewsPage({
 
 interface StrapiCategory extends StrapiEntry {
   name: string;
-  slug: string;
 }
 
 export async function getAllCategories(): Promise<string[]> {
@@ -230,19 +229,96 @@ export async function getUpcomingEvents(limit = 4): Promise<Event[]> {
 
 /* ──────────────── Sport ──────────────── */
 
-export async function getAllSport(): Promise<SportSection[]> {
-  const remote = await fetchStrapi<SportSection[]>('sport-sections', {
-    query: '?pagination[limit]=100',
-  });
-  return remote?.length ? remote : mockSport;
+interface StrapiSport extends StrapiEntry {
+  name: string;
+  slug: string;
+  age: string;
+  schedule: string;
+  scheduleDetailed?: string | null;
+  description?: string | null;
+  category?: { name: string } | null;
+  location?: StrapiLocation | null;
+  cover?: StrapiMedia | null;
+  gallery?: StrapiMedia[] | null;
+  contact?: {
+    phone?: string | null;
+    email?: string | null;
+    telegram?: string | null;
+    vk?: string | null;
+  } | null;
 }
 
-export async function getSportBySlug(slug: string): Promise<SportSection | null> {
-  const remote = await fetchStrapi<SportSection[]>('sport-sections', {
-    query: `?filters[slug][$eq]=${encodeURIComponent(slug)}`,
+function mapSport(entry: StrapiSport): Sport {
+  const coverUrl = absoluteMediaUrl(entry.cover?.url);
+  const gallery = entry.gallery
+    ?.map((m) => ({
+      url: absoluteMediaUrl(m.url) ?? '',
+      alt: m.alternativeText ?? undefined,
+    }))
+    .filter((m) => m.url);
+  return {
+    id: String(entry.id),
+    slug: entry.slug,
+    name: entry.name,
+    category: entry.category?.name ?? undefined,
+    venue: entry.location?.name ?? '',
+    address: entry.location?.address ?? undefined,
+    age: entry.age,
+    schedule: entry.schedule,
+    scheduleDetailed: entry.scheduleDetailed ?? undefined,
+    description: entry.description ?? undefined,
+    cover: coverUrl
+      ? { url: coverUrl, alt: entry.cover?.alternativeText ?? entry.name }
+      : undefined,
+    gallery: gallery?.length ? gallery : undefined,
+    contact: entry.contact
+      ? {
+          email: entry.contact.email ?? undefined,
+          phone: entry.contact.phone ?? undefined,
+          telegram: entry.contact.telegram ?? undefined,
+          vk: entry.contact.vk ?? undefined,
+        }
+      : undefined,
+  };
+}
+
+const SPORT_POPULATE =
+  'populate[category]=true' +
+  '&populate[location]=true' +
+  '&populate[cover]=true' +
+  '&populate[gallery]=true' +
+  '&populate[contact]=true';
+
+export async function getAllSport(): Promise<Sport[]> {
+  const remote = await fetchStrapi<StrapiSport[]>('sports', {
+    query: `?sort=name:asc&pagination[limit]=100&${SPORT_POPULATE}`,
   });
-  if (remote?.[0]) return remote[0];
-  return mockSport.find((s) => s.slug === slug) ?? null;
+  return remote?.map(mapSport) ?? [];
+}
+
+export async function getLatestSport(limit = 5): Promise<Sport[]> {
+  const remote = await fetchStrapi<StrapiSport[]>('sports', {
+    query: `?sort=createdAt:desc&pagination[limit]=${limit}&${SPORT_POPULATE}`,
+  });
+  return remote?.map(mapSport) ?? [];
+}
+
+export async function getSportBySlug(slug: string): Promise<Sport | null> {
+  const remote = await fetchStrapi<StrapiSport[]>('sports', {
+    query: `?filters[slug][$eq]=${encodeURIComponent(slug)}&${SPORT_POPULATE}`,
+  });
+  return remote?.[0] ? mapSport(remote[0]) : null;
+}
+
+interface StrapiSportCategory extends StrapiEntry {
+  name: string;
+}
+
+export async function getAllSportCategories(): Promise<string[]> {
+  const remote = await fetchStrapi<StrapiSportCategory[]>('sport-categories', {
+    query: '?sort=name:asc&pagination[limit]=100',
+  });
+  return remote?.map((c) => c.name) ?? [];
 }
 
 /* ──────────────── Vacancies ──────────────── */
@@ -297,6 +373,13 @@ export async function getAllVacancies(): Promise<Vacancy[]> {
   return remote?.map(mapVacancy) ?? [];
 }
 
+export async function getLatestVacancies(limit = 5): Promise<Vacancy[]> {
+  const remote = await fetchStrapi<StrapiVacancy[]>('vacancies', {
+    query: `?sort=createdAt:desc&pagination[limit]=${limit}&${VACANCY_POPULATE}`,
+  });
+  return remote?.map(mapVacancy) ?? [];
+}
+
 export async function getVacancyBySlug(slug: string): Promise<Vacancy | null> {
   const remote = await fetchStrapi<StrapiVacancy[]>('vacancies', {
     query: `?filters[slug][$eq]=${encodeURIComponent(slug)}&${VACANCY_POPULATE}`,
@@ -306,7 +389,6 @@ export async function getVacancyBySlug(slug: string): Promise<Vacancy | null> {
 
 interface StrapiVacancyCategory extends StrapiEntry {
   name: string;
-  slug: string;
 }
 
 export async function getAllVacancyCategories(): Promise<string[]> {
@@ -372,7 +454,6 @@ export async function searchAll(qRaw: string): Promise<SearchHit[]> {
         title: s.name,
         subtitle: `${s.venue} · ${s.age}`,
         excerpt: s.description,
-        pattern: s.fallbackPattern,
       });
     }
   }

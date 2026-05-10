@@ -1,9 +1,9 @@
 import { Button } from '@/components/ui/Button';
 import { SectionLabel } from '@/components/ui/SectionLabel';
-import type { SportSection as SportSectionT } from '@/lib/types';
+import type { Sport } from '@/lib/types';
 
 interface Props {
-  items: SportSectionT[];
+  items: Sport[];
 }
 
 export function SportSection({ items }: Props) {

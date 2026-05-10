@@ -45,20 +45,22 @@ export interface Event {
 
 /* ───────── Спорт ───────── */
 
-export interface SportSection {
+export interface Sport {
   id: string;
   slug: string;
   name: string;
-  category?: 'единоборства' | 'плавание' | 'игровые' | 'циклические' | 'фитнес' | 'другое';
+  /** Имя категории из Strapi SportCategory */
+  category?: string;
   venue: string;
   address?: string;
   age: string; // '6–17 лет'
   schedule: string; // 'пн, ср, пт'
-  scheduleDetailed?: string[];
+  /** Markdown — рендерится через Markdown-компонент */
+  scheduleDetailed?: string;
   description?: string;
-  contacts?: { phone?: string; vk?: string; tg?: string };
-  fallbackPattern?: Pattern;
-  gallery?: Pattern[];
+  cover?: { url: string; alt?: string };
+  gallery?: { url: string; alt?: string }[];
+  contact?: { phone?: string; vk?: string; telegram?: string; email?: string };
 }
 
 /* ───────── Вакансии ───────── */

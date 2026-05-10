@@ -10,6 +10,7 @@ export interface CommonContact extends Struct.ComponentSchema {
     email: Schema.Attribute.Email;
     phone: Schema.Attribute.String;
     telegram: Schema.Attribute.String;
+    vk: Schema.Attribute.String;
   };
 }
 

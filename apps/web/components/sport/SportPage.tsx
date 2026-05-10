@@ -1,10 +1,11 @@
-import { Button } from '@/components/ui/Button';
-import { PatternBox } from '@/components/ui/PatternBox';
+import Image from 'next/image';
+import { MediaGallery } from '@/components/ui/MediaGallery';
+import { Markdown } from '@/components/ui/Markdown';
 import { Pill } from '@/components/ui/Pill';
-import type { SportSection } from '@/lib/types';
+import type { Sport } from '@/lib/types';
 
 interface Props {
-  section: SportSection;
+  section: Sport;
 }
 
 export function SportPage({ section }: Props) {
@@ -23,11 +24,18 @@ export function SportPage({ section }: Props) {
             <p className="m-0 text-base leading-relaxed text-ink-70">{section.description}</p>
           )}
         </div>
-        <PatternBox
-          className="h-[360px]"
-          pattern={section.fallbackPattern ?? 'zigzag'}
-          label="секция"
-        />
+        {section.cover && (
+          <div className="relative h-[360px] overflow-hidden rounded-md border-1.5 border-ink">
+            <Image
+              src={section.cover.url}
+              alt={section.cover.alt ?? section.name}
+              fill
+              sizes="(max-width: 768px) 100vw, 40vw"
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
       </section>
 
       <section className="px-4 md:px-9 py-9 border-t-1.5 border-ink bg-paper-2">
@@ -36,13 +44,11 @@ export function SportPage({ section }: Props) {
             <div className="text-[11px] uppercase tracking-[0.1em] text-ink-50 font-bold mb-2">
               Расписание
             </div>
-            <ul className="m-0 p-0 list-none flex flex-col gap-1.5 font-semibold">
-              {(section.scheduleDetailed ?? [section.schedule]).map((s, i) => (
-                <li key={i} className="border-b border-dashed border-ink-20 pb-1.5">
-                  {s}
-                </li>
-              ))}
-            </ul>
+            {section.scheduleDetailed ? (
+              <Markdown>{section.scheduleDetailed}</Markdown>
+            ) : (
+              <div className="font-semibold">{section.schedule}</div>
+            )}
           </div>
           <div>
             <div className="text-[11px] uppercase tracking-[0.1em] text-ink-50 font-bold mb-2">
@@ -56,36 +62,44 @@ export function SportPage({ section }: Props) {
               Контакты
             </div>
             <div className="flex flex-col gap-1.5 text-sm">
-              {section.contacts?.phone && (
-                <a href={`tel:${section.contacts.phone}`} className="font-semibold">
-                  {section.contacts.phone}
+              {section.contact?.phone && (
+                <a href={`tel:${section.contact.phone}`} className="font-semibold">
+                  {section.contact.phone}
                 </a>
               )}
-              {section.contacts?.vk && (
-                <a href={`https://vk.com/${section.contacts.vk}`} className="font-semibold">
-                  vk · {section.contacts.vk}
+              {section.contact?.email && (
+                <a href={`mailto:${section.contact.email}`} className="font-semibold">
+                  {section.contact.email}
                 </a>
               )}
-              {section.contacts?.tg && (
-                <a href={`https://t.me/${section.contacts.tg}`} className="font-semibold">
-                  tg · {section.contacts.tg}
+              {section.contact?.vk && (
+                <a
+                  href={`https://vk.com/${section.contact.vk}`}
+                  className="font-semibold"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  vk · {section.contact.vk}
                 </a>
               )}
-              {!section.contacts && <span className="text-ink-50">уточняйте на площадке</span>}
+              {section.contact?.telegram && (
+                <a
+                  href={`https://t.me/${section.contact.telegram}`}
+                  className="font-semibold"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  tg · {section.contact.telegram}
+                </a>
+              )}
+              {!section.contact && <span className="text-ink-50">уточняйте на площадке</span>}
             </div>
           </div>
         </div>
       </section>
 
       {section.gallery && section.gallery.length > 0 && (
-        <section className="px-4 md:px-9 py-9 max-w-page mx-auto">
-          <h2 className="m-0 mb-4 font-extrabold text-2xl tracking-tight">Фото секции</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {section.gallery.map((p, i) => (
-              <PatternBox key={i} className="h-[180px]" pattern={p} />
-            ))}
-          </div>
-        </section>
+        <MediaGallery items={section.gallery} title="Фото секции" />
       )}
     </article>
   );

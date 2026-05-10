@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sport_categories",
+  "info": {
+    "singularName": "sport-category",
+    "pluralName": "sport-categories",
+    "displayName": "Sport Category",
+    "description": "Группировка спортивных секций"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 60
+    }
+  }
+}

@@ -3,30 +3,25 @@
 import { useMemo, useState } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Pill } from '@/components/ui/Pill';
-import type { SportSection } from '@/lib/types';
+import type { Sport } from '@/lib/types';
 
 interface Props {
-  items: SportSection[];
+  items: Sport[];
+  categories: string[];
 }
 
-const CATS: Array<'все' | NonNullable<SportSection['category']>> = [
-  'все',
-  'единоборства',
-  'плавание',
-  'игровые',
-  'циклические',
-  'фитнес',
-  'другое',
-];
+const ALL = 'все';
+const UNCATEGORIZED = 'другое';
 
-export function SportListing({ items }: Props) {
-  const [cat, setCat] = useState<(typeof CATS)[number]>('все');
+export function SportListing({ items, categories }: Props) {
+  const cats = useMemo(() => [ALL, ...categories], [categories]);
+  const [cat, setCat] = useState<string>(ALL);
 
   const grouped = useMemo(() => {
-    const filtered = cat === 'все' ? items : items.filter((s) => s.category === cat);
-    const map = new Map<string, SportSection[]>();
+    const filtered = cat === ALL ? items : items.filter((s) => s.category === cat);
+    const map = new Map<string, Sport[]>();
     filtered.forEach((s) => {
-      const key = s.category ?? 'другое';
+      const key = s.category ?? UNCATEGORIZED;
       if (!map.has(key)) map.set(key, []);
       map.get(key)!.push(s);
     });
@@ -36,9 +31,10 @@ export function SportListing({ items }: Props) {
   return (
     <section className="px-4 md:px-9 py-9 max-w-page mx-auto">
       <div className="flex flex-wrap gap-2 mb-8">
-        {CATS.map((c) => (
+        {cats.map((c) => (
           <button
             key={c}
+            type="button"
             onClick={() => setCat(c)}
             className={`px-3.5 py-2 rounded-full border-1.5 border-ink font-semibold text-xs cursor-pointer btn-hover ${cat === c ? 'bg-accent text-white' : 'bg-cream text-ink'}`}
           >

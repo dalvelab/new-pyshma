@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { EventGallery } from '@/components/afisha/EventGallery';
+import { MediaGallery } from '@/components/ui/MediaGallery';
 import { formatEventDate } from '@/components/home/format';
 import { Button } from '@/components/ui/Button';
 import { Markdown } from '@/components/ui/Markdown';
@@ -71,7 +71,7 @@ export function EventPage({ event }: Props) {
       )}
 
       {event.gallery && event.gallery.length > 0 && (
-        <EventGallery items={event.gallery} title="Галерея" />
+        <MediaGallery items={event.gallery} title="Галерея" />
       )}
     </article>
   );

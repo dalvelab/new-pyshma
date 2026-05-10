@@ -1,0 +1,70 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sports",
+  "info": {
+    "singularName": "sport",
+    "pluralName": "sports",
+    "displayName": "Sport",
+    "description": "Спортивные секции и кружки"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 200
+    },
+    "slug": {
+      "type": "string",
+      "unique": true,
+      "maxLength": 280
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::sport-category.sport-category"
+    },
+    "location": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "required": true,
+      "target": "api::location.location"
+    },
+    "age": {
+      "type": "string",
+      "required": true,
+      "maxLength": 60
+    },
+    "schedule": {
+      "type": "string",
+      "required": true,
+      "maxLength": 60
+    },
+    "scheduleDetailed": {
+      "type": "richtext"
+    },
+    "description": {
+      "type": "text",
+      "maxLength": 600
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"]
+    },
+    "gallery": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": ["images"]
+    },
+    "contact": {
+      "type": "component",
+      "repeatable": false,
+      "component": "common.contact"
+    }
+  }
+}
