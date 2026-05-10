@@ -1,7 +1,9 @@
 /* Тонкая обёртка над REST API Strapi v5.
    - Возвращает `data` из ответа (Strapi v5 не оборачивает атрибуты в `attributes`).
-   - Кеш Next.js через `revalidate` (по умолчанию 60 сек).
+   - Кеш Next.js через `revalidate` (REVALIDATE_SECONDS — короче в dev).
    - На любой ошибке отдаёт `null`, чтобы вызывающий код мог откатиться на mock. */
+
+import { REVALIDATE_SECONDS } from './cache';
 
 export const STRAPI_URL = process.env.STRAPI_URL;
 const STRAPI_TOKEN = process.env.STRAPI_TOKEN;
@@ -38,7 +40,7 @@ export async function fetchStrapi<T>(collection: string, opts: FetchOpts = {}): 
   try {
     const res = await fetch(url, {
       headers: STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {},
-      next: { revalidate: opts.revalidate ?? 60 },
+      next: { revalidate: opts.revalidate ?? REVALIDATE_SECONDS },
     });
     if (!res.ok) return null;
     const json = await res.json();
@@ -70,7 +72,7 @@ export async function fetchStrapiPage<T>(
   try {
     const res = await fetch(url, {
       headers: STRAPI_TOKEN ? { Authorization: `Bearer ${STRAPI_TOKEN}` } : {},
-      next: { revalidate: opts.revalidate ?? 60 },
+      next: { revalidate: opts.revalidate ?? REVALIDATE_SECONDS },
     });
     if (!res.ok) return null;
     return (await res.json()) as StrapiPage<T>;

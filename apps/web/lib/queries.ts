@@ -1,4 +1,4 @@
-import { mockFestivalLanding, mockSport, mockVacancies } from './mock';
+import { mockFestivalLanding, mockSport } from './mock';
 import {
   absoluteMediaUrl,
   fetchStrapi,
@@ -247,19 +247,73 @@ export async function getSportBySlug(slug: string): Promise<SportSection | null>
 
 /* ──────────────── Vacancies ──────────────── */
 
+interface StrapiVacancy extends StrapiEntry {
+  title: string;
+  slug: string;
+  company?: string | null;
+  salary: string;
+  experience: string;
+  schedule: string;
+  employmentType?: string | null;
+  category?: { name: string } | null;
+  description?: string | null;
+  responsibilities?: string | null;
+  requirements?: string | null;
+  applyUrl?: string | null;
+  contact?: { email?: string | null; phone?: string | null; telegram?: string | null } | null;
+}
+
+function mapVacancy(entry: StrapiVacancy): Vacancy {
+  return {
+    id: String(entry.id),
+    slug: entry.slug,
+    title: entry.title,
+    company: entry.company ?? undefined,
+    salary: entry.salary,
+    experience: entry.experience,
+    schedule: entry.schedule,
+    employmentType: (entry.employmentType ?? undefined) as Vacancy['employmentType'],
+    category: entry.category?.name ?? undefined,
+    description: entry.description ?? undefined,
+    responsibilities: entry.responsibilities ?? undefined,
+    requirements: entry.requirements ?? undefined,
+    applyUrl: entry.applyUrl ?? undefined,
+    contact: entry.contact
+      ? {
+          email: entry.contact.email ?? undefined,
+          phone: entry.contact.phone ?? undefined,
+          telegram: entry.contact.telegram ?? undefined,
+        }
+      : undefined,
+  };
+}
+
+const VACANCY_POPULATE = 'populate[category]=true&populate[contact]=true';
+
 export async function getAllVacancies(): Promise<Vacancy[]> {
-  const remote = await fetchStrapi<Vacancy[]>('vacancies', {
-    query: '?sort=publishedAt:desc&pagination[limit]=100',
+  const remote = await fetchStrapi<StrapiVacancy[]>('vacancies', {
+    query: `?sort=createdAt:desc&pagination[limit]=100&${VACANCY_POPULATE}`,
   });
-  return remote?.length ? remote : mockVacancies;
+  return remote?.map(mapVacancy) ?? [];
 }
 
 export async function getVacancyBySlug(slug: string): Promise<Vacancy | null> {
-  const remote = await fetchStrapi<Vacancy[]>('vacancies', {
-    query: `?filters[slug][$eq]=${encodeURIComponent(slug)}`,
+  const remote = await fetchStrapi<StrapiVacancy[]>('vacancies', {
+    query: `?filters[slug][$eq]=${encodeURIComponent(slug)}&${VACANCY_POPULATE}`,
   });
-  if (remote?.[0]) return remote[0];
-  return mockVacancies.find((v) => v.slug === slug) ?? null;
+  return remote?.[0] ? mapVacancy(remote[0]) : null;
+}
+
+interface StrapiVacancyCategory extends StrapiEntry {
+  name: string;
+  slug: string;
+}
+
+export async function getAllVacancyCategories(): Promise<string[]> {
+  const remote = await fetchStrapi<StrapiVacancyCategory[]>('vacancy-categories', {
+    query: '?sort=name:asc&pagination[limit]=100',
+  });
+  return remote?.map((c) => c.name) ?? [];
 }
 
 /* ──────────────── Festival landing ──────────────── */
@@ -330,7 +384,6 @@ export async function searchAll(qRaw: string): Promise<SearchHit[]> {
         title: v.title,
         subtitle: `${v.salary} · ${v.schedule}`,
         excerpt: v.description,
-        pattern: v.fallbackPattern,
       });
     }
   }

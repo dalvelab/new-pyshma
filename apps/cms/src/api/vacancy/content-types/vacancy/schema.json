@@ -1,0 +1,75 @@
+{
+  "kind": "collectionType",
+  "collectionName": "vacancies",
+  "info": {
+    "singularName": "vacancy",
+    "pluralName": "vacancies",
+    "displayName": "Vacancy",
+    "description": "Открытые вакансии"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200
+    },
+    "slug": {
+      "type": "string",
+      "unique": true,
+      "maxLength": 280
+    },
+    "company": {
+      "type": "string"
+    },
+    "salary": {
+      "type": "string",
+      "required": true,
+      "maxLength": 60
+    },
+    "experience": {
+      "type": "string",
+      "required": true
+    },
+    "schedule": {
+      "type": "string",
+      "required": true
+    },
+    "employmentType": {
+      "type": "enumeration",
+      "enum": [
+        "полный день",
+        "неполный день",
+        "удалённо",
+        "сменный график",
+        "проект"
+      ]
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::vacancy-category.vacancy-category"
+    },
+    "description": {
+      "type": "text",
+      "maxLength": 600
+    },
+    "responsibilities": {
+      "type": "richtext"
+    },
+    "requirements": {
+      "type": "richtext"
+    },
+    "applyUrl": {
+      "type": "string"
+    },
+    "contact": {
+      "type": "component",
+      "repeatable": false,
+      "component": "common.contact"
+    }
+  }
+}

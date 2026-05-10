@@ -654,6 +654,109 @@ export interface ApiShowShow extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiVacancyCategoryVacancyCategory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'vacancy_categories';
+  info: {
+    description: '\u0421\u0444\u0435\u0440\u044B \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0439';
+    displayName: 'Vacancy Category';
+    pluralName: 'vacancy-categories';
+    singularName: 'vacancy-category';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::vacancy-category.vacancy-category'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiVacancyVacancy extends Struct.CollectionTypeSchema {
+  collectionName: 'vacancies';
+  info: {
+    description: '\u041E\u0442\u043A\u0440\u044B\u0442\u044B\u0435 \u0432\u0430\u043A\u0430\u043D\u0441\u0438\u0438';
+    displayName: 'Vacancy';
+    pluralName: 'vacancies';
+    singularName: 'vacancy';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    applyUrl: Schema.Attribute.String;
+    category: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::vacancy-category.vacancy-category'
+    >;
+    company: Schema.Attribute.String;
+    contact: Schema.Attribute.Component<'common.contact', false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 600;
+      }>;
+    employmentType: Schema.Attribute.Enumeration<
+      [
+        '\u043F\u043E\u043B\u043D\u044B\u0439 \u0434\u0435\u043D\u044C',
+        '\u043D\u0435\u043F\u043E\u043B\u043D\u044B\u0439 \u0434\u0435\u043D\u044C',
+        '\u0443\u0434\u0430\u043B\u0451\u043D\u043D\u043E',
+        '\u0441\u043C\u0435\u043D\u043D\u044B\u0439 \u0433\u0440\u0430\u0444\u0438\u043A',
+        '\u043F\u0440\u043E\u0435\u043A\u0442',
+      ]
+    >;
+    experience: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::vacancy.vacancy'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    requirements: Schema.Attribute.RichText;
+    responsibilities: Schema.Attribute.RichText;
+    salary: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
+    schedule: Schema.Attribute.String & Schema.Attribute.Required;
+    slug: Schema.Attribute.String &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 280;
+      }>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -1170,6 +1273,8 @@ declare module '@strapi/strapi' {
       'api::category.category': ApiCategoryCategory;
       'api::location.location': ApiLocationLocation;
       'api::show.show': ApiShowShow;
+      'api::vacancy-category.vacancy-category': ApiVacancyCategoryVacancyCategory;
+      'api::vacancy.vacancy': ApiVacancyVacancy;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

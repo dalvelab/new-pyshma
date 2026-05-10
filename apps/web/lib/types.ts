@@ -76,18 +76,18 @@ export interface Vacancy {
   title: string;
   company?: string;
   salary: string; // 'от 45 000 ₽'
-  salaryFrom?: number; // для фильтрации
   experience: string;
   schedule: string;
   employmentType?: EmploymentType;
-  category?: 'медиа' | 'образование' | 'сервис' | 'спорт' | 'культура' | 'IT' | 'другое';
-  publishedAt?: string;
+  /** Имя категории из Strapi VacancyCategory */
+  category?: string;
   description?: string;
-  responsibilities?: string[];
-  requirements?: string[];
-  perks?: string[];
-  contacts?: { email?: string; phone?: string; tg?: string };
-  fallbackPattern?: Pattern;
+  /** Markdown — рендерится через Markdown-компонент */
+  responsibilities?: string;
+  requirements?: string;
+  /** Внешняя ссылка для отклика (hh, форма и т.п.) */
+  applyUrl?: string;
+  contact?: { email?: string; phone?: string; telegram?: string };
 }
 
 /* ───────── Фестиваль ───────── */

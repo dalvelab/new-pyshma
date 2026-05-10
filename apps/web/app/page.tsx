@@ -1,11 +1,12 @@
 import { fetchStrapi } from '@/lib/strapi';
-import { getLatestNews, getLeadArticle, getUpcomingEvents } from '@/lib/queries';
-import { mockFestival, mockSport, mockVacancies } from '@/lib/mock';
-import type {
-  FestivalTeaser,
-  SportSection as SportSectionT,
-  Vacancy,
-} from '@/lib/types';
+import {
+  getAllVacancies,
+  getLatestNews,
+  getLeadArticle,
+  getUpcomingEvents,
+} from '@/lib/queries';
+import { mockFestival, mockSport } from '@/lib/mock';
+import type { FestivalTeaser, SportSection as SportSectionT } from '@/lib/types';
 
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
@@ -23,12 +24,12 @@ import { VacanciesSection } from '@/components/home/VacanciesSection';
 export const revalidate = 60;
 
 async function getHomeData() {
-  const [lead, news, events, sportRes, vacanciesRes, festRes] = await Promise.all([
+  const [lead, news, events, sportRes, vacancies, festRes] = await Promise.all([
     getLeadArticle(),
     getLatestNews(4),
     getUpcomingEvents(4),
     fetchStrapi<SportSectionT[]>('sport-sections', { query: '?pagination[limit]=5' }),
-    fetchStrapi<Vacancy[]>('vacancies', { query: '?sort=publishedAt:desc&pagination[limit]=5' }),
+    getAllVacancies(),
     fetchStrapi<FestivalTeaser>('festival-teaser'),
   ]);
 
@@ -37,7 +38,7 @@ async function getHomeData() {
     news,
     events,
     sport: (sportRes?.length ? sportRes : mockSport).slice(0, 5),
-    vacancies: (vacanciesRes?.length ? vacanciesRes : mockVacancies).slice(0, 5),
+    vacancies: vacancies.slice(0, 5),
     festival: festRes ?? mockFestival,
   };
 }

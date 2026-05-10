@@ -40,13 +40,13 @@ export function SiteFooter() {
           <div className="text-[11px] text-paper/55 uppercase tracking-[0.1em]">документы</div>
           <a
             href="/legal/terms"
-            className="text-xs md:text-base text-paper border-b border-paper/40 self-start"
+            className="text-xs md:text-sm text-paper border-b border-paper/40 self-start"
           >
             Пользовательское соглашение
           </a>
           <a
             href="/legal/privacy"
-            className="text-xs md:text-base text-paper border-b border-paper/40 self-start"
+            className="text-xs md:text-sm text-paper border-b border-paper/40 self-start"
           >
             Политика конфиденциальности
           </a>

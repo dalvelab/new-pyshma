@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "vacancy_categories",
+  "info": {
+    "singularName": "vacancy-category",
+    "pluralName": "vacancy-categories",
+    "displayName": "Vacancy Category",
+    "description": "Сферы вакансий"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "maxLength": 60
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    }
+  }
+}

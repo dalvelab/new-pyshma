@@ -1,11 +1,14 @@
 import { PageShell } from '@/components/layout/PageShell';
 import { VacanciesListing } from '@/components/vacancies/VacanciesListing';
-import { getAllVacancies } from '@/lib/queries';
+import { getAllVacancies, getAllVacancyCategories } from '@/lib/queries';
 
 export const revalidate = 60;
 
 export default async function VacanciesIndexPage() {
-  const items = await getAllVacancies();
+  const [items, categories] = await Promise.all([
+    getAllVacancies(),
+    getAllVacancyCategories(),
+  ]);
   return (
     <PageShell
       crumbs={[['Вакансии']]}
@@ -16,7 +19,7 @@ export default async function VacanciesIndexPage() {
       }
       intro="Открытые вакансии Верхней Пышмы — медиа, образование, сервис, спорт, культура и IT."
     >
-      <VacanciesListing items={items} />
+      <VacanciesListing items={items} categories={categories} />
     </PageShell>
   );
 }

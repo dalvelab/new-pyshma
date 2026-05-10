@@ -10,7 +10,7 @@ interface Props {
 export function VacanciesSection({ items }: Props) {
   return (
     <div>
-      <SectionLabel>Вакансии · работа в городе</SectionLabel>
+      <SectionLabel>Вакансии</SectionLabel>
       <div className="flex flex-col gap-2.5">
         {items.map((v) => (
           <a key={v.id} href={`/vacancies/${v.slug}`}>
