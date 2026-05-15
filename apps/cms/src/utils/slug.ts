@@ -12,7 +12,13 @@ function formatDate(d: Date): string {
 }
 
 export function buildSlug(title: string, date: Date): string {
-  const cleaned = title.replace(/[,?]/gi, '');
-  const base = translit.transform(cleaned, '-').toLowerCase();
+  const transliterated = translit.transform(title, '-').toLowerCase();
+  // Оставляем только латиницу/цифры/дефис; всё остальное (кавычки-ёлочки,
+  // точки, скобки, неразрывные пробелы, эмодзи и т.п.) → дефис,
+  // потом схлопываем повторы и срезаем по краям.
+  const base = transliterated
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
   return `${base}-${formatDate(date)}`;
 }

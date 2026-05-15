@@ -4,6 +4,7 @@ import { formatEventDate } from '@/components/home/format';
 import { Button } from '@/components/ui/Button';
 import { Markdown } from '@/components/ui/Markdown';
 import { Pill } from '@/components/ui/Pill';
+import { formatEkb } from '@/lib/datetime';
 import type { Event } from '@/lib/types';
 
 interface Props {
@@ -38,7 +39,7 @@ export function EventPage({ event }: Props) {
           <dl className="grid grid-cols-[88px_1fr] sm:grid-cols-[120px_1fr] gap-y-2 text-[15px] mt-2">
             <dt className="text-ink-50">когда</dt>
             <dd className="m-0 font-semibold">
-              {new Date(event.startsAt).toLocaleString('ru-RU', {
+              {formatEkb(event.startsAt, {
                 day: 'numeric',
                 month: 'long',
                 hour: '2-digit',

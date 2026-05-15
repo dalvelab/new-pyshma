@@ -1,3 +1,4 @@
+import { formatEkb } from './datetime';
 import {
   absoluteMediaUrl,
   fetchStrapi,
@@ -635,7 +636,7 @@ export async function searchAll(qRaw: string): Promise<SearchHit[]> {
         kind: 'event',
         slug: e.slug,
         title: e.title,
-        subtitle: `${e.place} · ${new Date(e.startsAt).toLocaleDateString('ru-RU')}`,
+        subtitle: `${e.place} · ${formatEkb(e.startsAt, { day: 'numeric', month: 'numeric', year: 'numeric' })}`,
         excerpt: e.description,
       });
     }

@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Card } from '@/components/ui/Card';
+import { ekbDayKey, getEkbParts } from '@/lib/datetime';
 import type { FestivalProgram } from '@/lib/types';
 
 interface Props {
@@ -31,27 +32,22 @@ const MONTHS = [
 ];
 
 function fmtTime(iso: string) {
-  const d = new Date(iso);
-  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-}
-
-function dayKey(iso: string) {
-  return iso.slice(0, 10); // YYYY-MM-DD
+  const p = getEkbParts(iso);
+  return `${String(p.hours).padStart(2, '0')}:${String(p.minutes).padStart(2, '0')}`;
 }
 
 function dayHeader(iso: string) {
-  const d = new Date(iso);
-  const day = d.getDate();
-  const month = MONTHS[d.getMonth()].toUpperCase();
-  const wk = WEEKDAYS[d.getDay()];
-  return { date: `${day} ${month}`, wk };
+  const p = getEkbParts(iso);
+  const month = MONTHS[p.month - 1].toUpperCase();
+  const wk = WEEKDAYS[p.weekday];
+  return { date: `${p.day} ${month}`, wk };
 }
 
 /** Программа фестиваля — карточная сетка, сгруппированная по дням. */
 export function ProgramTabs({ items }: Props) {
   const byDay = new Map<string, FestivalProgram[]>();
   for (const p of items) {
-    const k = dayKey(p.date);
+    const k = ekbDayKey(p.date);
     if (!byDay.has(k)) byDay.set(k, []);
     byDay.get(k)!.push(p);
   }

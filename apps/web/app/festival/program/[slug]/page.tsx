@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { Markdown } from '@/components/ui/Markdown';
+import { formatEkb } from '@/lib/datetime';
 import { buildMetadata } from '@/lib/metadata';
 import { getFestivalProgramBySlug, getFestivalPrograms } from '@/lib/queries';
 
@@ -37,8 +38,7 @@ export default async function FestivalProgramRoute({
   const program = await getFestivalProgramBySlug(params.slug);
   if (!program) notFound();
 
-  const date = new Date(program.date);
-  const fullDate = date.toLocaleString('ru-RU', {
+  const fullDate = formatEkb(program.date, {
     day: 'numeric',
     month: 'long',
     hour: '2-digit',
