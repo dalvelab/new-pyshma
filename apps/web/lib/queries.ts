@@ -509,15 +509,20 @@ export async function getPastFestivals(): Promise<PastFestival[]> {
 
 /** Лёгкий тизер для главной — дата + бегущая строка. */
 export async function getFestivalTeaser(): Promise<FestivalTeaser | null> {
-  const remote = await fetchStrapi<StrapiFestival>('festival', {
-    query: '?fields[0]=date&fields[1]=marquee',
-  });
+  const [remote, past] = await Promise.all([
+    fetchStrapi<StrapiFestival>('festival', {
+      query: '?fields[0]=date&fields[1]=marquee',
+    }),
+    fetchStrapi<StrapiPastFestival[]>('past-festivals', {
+      query: '?fields[0]=year&pagination[limit]=1',
+    }),
+  ]);
   if (!remote) return null;
   const marquee = (remote.marquee ?? '')
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
-  return { date: remote.date, marquee };
+  return { date: remote.date, marquee, hasPast: (past?.length ?? 0) > 0 };
 }
 
 /* ──────────────── Festival programs ──────────────── */

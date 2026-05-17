@@ -32,12 +32,14 @@ export function FestTeaser({ teaser }: Props) {
             <Button variant="primary" href="/festival#program">
               программа →
             </Button>
-            <a
-              className="px-[18px] py-3 rounded-lg border-1.5 border-paper/40 bg-transparent text-cream font-bold text-sm cursor-pointer btn-hover"
-              href="/festival/2025"
-            >
-              как это было
-            </a>
+            {teaser.hasPast && (
+              <a
+                className="px-[18px] py-3 rounded-lg border-1.5 border-paper/40 bg-transparent text-cream font-bold text-sm cursor-pointer btn-hover"
+                href="/festival#past"
+              >
+                как это было
+              </a>
+            )}
           </div>
         </div>
         <PatternBox className="h-[240px] sm:h-[300px] md:h-[380px]" pattern="warm" illustration="stage" />

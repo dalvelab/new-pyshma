@@ -24,7 +24,7 @@ export async function SiteFooter() {
             Рекламодателям → Telegram
           </a>
           <p className="mt-2 text-[11px] text-paper/55 leading-relaxed">
-            ООО «ШИП-Медиа» · ИНН 0000000000 · ОГРН 0000000000000
+            ООО «Венский фестиваль» · ИНН 6685060986 · ОГРН 1146685020536
           </p>
         </div>
 

@@ -58,12 +58,14 @@ export function FestivalLandingView({ data, pastYears, programs }: Props) {
               <Button variant="primary" href="#program">
                 программа →
               </Button>
-              <a
-                href="#past"
-                className="px-[22px] py-3.5 rounded-lg border-1.5 border-cream bg-transparent text-cream font-bold text-sm tracking-wide cursor-pointer btn-hover"
-              >
-                как это было
-              </a>
+              {pastYears.length > 0 && (
+                <a
+                  href="#past"
+                  className="px-[22px] py-3.5 rounded-lg border-1.5 border-cream bg-transparent text-cream font-bold text-sm tracking-wide cursor-pointer btn-hover"
+                >
+                  как это было
+                </a>
+              )}
             </div>
           </div>
 
@@ -125,13 +127,13 @@ export function FestivalLandingView({ data, pastYears, programs }: Props) {
         <section id="venues" className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-paper-2">
           <div className="max-w-page mx-auto">
             <SectionHeader title="Карта · площадки" />
-            <div className="relative aspect-[16/8] border-1.5 border-ink rounded-xl overflow-hidden">
+            <div className="relative aspect-[16/8] border-1.5 border-ink rounded-xl overflow-hidden bg-cream">
               <Image
                 src={data.mapImage.url}
                 alt={data.mapImage.alt ?? 'Карта фестиваля'}
                 fill
                 sizes="(max-width: 1280px) 100vw, 1280px"
-                className="object-cover"
+                className="object-contain"
               />
             </div>
           </div>

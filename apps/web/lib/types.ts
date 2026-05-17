@@ -98,6 +98,8 @@ export interface FestivalTeaser {
   date: string;
   /** Бегущая строка под тизером — массив пунктов через запятую в админке */
   marquee: string[];
+  /** Есть ли в CMS хоть один прошлый сезон — для показа кнопки «как это было». */
+  hasPast: boolean;
 }
 
 export interface FestivalProgram {
