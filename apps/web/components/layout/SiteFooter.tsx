@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { SocialIcon } from '@/components/ui/SocialIcon';
 import { getFooter } from '@/lib/queries';
@@ -23,6 +24,16 @@ export async function SiteFooter() {
           <a href="https://t.me/shipmedia" className="text-sm underline underline-offset-2">
             Рекламодателям → Telegram
           </a>
+          <div className="mt-3 flex flex-col gap-1.5">
+            <div className="text-[11px] text-paper/55 uppercase tracking-[0.1em]">при поддержке</div>
+            <Image
+              src="/elem-logo.png"
+              alt="АО «Уралэлектромедь»"
+              width={140}
+              height={68}
+              className="h-auto w-[140px]"
+            />
+          </div>
           <p className="mt-2 text-[11px] text-paper/55 leading-relaxed">
             ООО «Венский фестиваль» · ИНН 6685060986 · ОГРН 1146685020536
           </p>
