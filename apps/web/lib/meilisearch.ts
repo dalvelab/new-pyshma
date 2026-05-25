@@ -52,12 +52,15 @@ export async function searchMeili(qRaw: string): Promise<SearchHit[]> {
   const q = qRaw.trim();
   if (!q || !client) return [];
 
+  // matchingStrategy: 'all' заставляет Meili требовать все слова запроса;
+  // без него Meili отбрасывает слова с конца и матчит частично — отсюда
+  // мусорные результаты на длинных фразах.
   const res = await client.multiSearch({
     queries: [
-      { indexUid: 'article', q, limit: PER_INDEX_LIMIT },
-      { indexUid: 'afisha', q, limit: PER_INDEX_LIMIT },
-      { indexUid: 'sport', q, limit: PER_INDEX_LIMIT },
-      { indexUid: 'vacancy', q, limit: PER_INDEX_LIMIT },
+      { indexUid: 'article', q, limit: PER_INDEX_LIMIT, matchingStrategy: 'all' },
+      { indexUid: 'afisha', q, limit: PER_INDEX_LIMIT, matchingStrategy: 'all' },
+      { indexUid: 'sport', q, limit: PER_INDEX_LIMIT, matchingStrategy: 'all' },
+      { indexUid: 'vacancy', q, limit: PER_INDEX_LIMIT, matchingStrategy: 'all' },
     ],
   });
 
