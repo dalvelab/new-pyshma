@@ -89,7 +89,7 @@ export function SearchModal({ open, onClose }: Props) {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && submit()}
-            placeholder="Поиск по новостям, афише, секциям и вакансиям…"
+            placeholder="Поиск…"
             className="flex-1 bg-transparent border-0 outline-none text-lg font-semibold placeholder:text-ink-50"
           />
           <button

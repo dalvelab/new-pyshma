@@ -22,6 +22,9 @@ build/
 .DS_Store
 *.pem
 
+# docker volumes
+/data/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

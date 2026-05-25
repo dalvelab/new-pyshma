@@ -1,5 +1,5 @@
 import { PageShell } from '@/components/layout/PageShell';
-import { searchAll } from '@/lib/queries';
+import { searchMeili } from '@/lib/meilisearch';
 import type { SearchHit } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -19,7 +19,7 @@ const KIND_HREF: Record<SearchHit['kind'], (slug: string) => string> = {
 
 export default async function SearchPage({ searchParams }: { searchParams: { q?: string } }) {
   const q = searchParams.q ?? '';
-  const hits = q ? await searchAll(q) : [];
+  const hits = q ? await searchMeili(q) : [];
   const grouped = hits.reduce<Record<SearchHit['kind'], SearchHit[]>>(
     (acc, h) => {
       (acc[h.kind] ||= []).push(h);

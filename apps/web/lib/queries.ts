@@ -1,4 +1,3 @@
-import { formatEkb } from './datetime';
 import {
   absoluteMediaUrl,
   fetchStrapi,
@@ -14,7 +13,6 @@ import type {
   FestivalTeaser,
   FooterData,
   PastFestival,
-  SearchHit,
   SocialPlatform,
   Sport,
   Vacancy,
@@ -605,68 +603,3 @@ export async function getFooter(): Promise<FooterData | null> {
   };
 }
 
-/* ──────────────── Search ──────────────── */
-
-/** Простейший текстовый match. Достаточен для прототипа;
-    в проде стоит заменить на Strapi search-plugin или Meilisearch. */
-export async function searchAll(qRaw: string): Promise<SearchHit[]> {
-  const q = qRaw.trim().toLowerCase();
-  if (!q) return [];
-  const [news, events, sport, vacancies] = await Promise.all([
-    getAllNews(),
-    getAllEvents(),
-    getAllSport(),
-    getAllVacancies(),
-  ]);
-  const hits: SearchHit[] = [];
-
-  for (const a of news) {
-    if (a.title.toLowerCase().includes(q) || (a.excerpt ?? '').toLowerCase().includes(q)) {
-      hits.push({
-        kind: 'news',
-        slug: a.slug,
-        title: a.title,
-        subtitle: a.category,
-        excerpt: a.excerpt,
-      });
-    }
-  }
-  for (const e of events) {
-    if (
-      e.title.toLowerCase().includes(q) ||
-      (e.description ?? '').toLowerCase().includes(q) ||
-      e.place.toLowerCase().includes(q)
-    ) {
-      hits.push({
-        kind: 'event',
-        slug: e.slug,
-        title: e.title,
-        subtitle: `${e.place} · ${formatEkb(e.startsAt, { day: 'numeric', month: 'numeric', year: 'numeric' })}`,
-        excerpt: e.description,
-      });
-    }
-  }
-  for (const s of sport) {
-    if (s.name.toLowerCase().includes(q) || (s.description ?? '').toLowerCase().includes(q)) {
-      hits.push({
-        kind: 'sport',
-        slug: s.slug,
-        title: s.name,
-        subtitle: `${s.venue} · ${s.age}`,
-        excerpt: s.description,
-      });
-    }
-  }
-  for (const v of vacancies) {
-    if (v.title.toLowerCase().includes(q) || (v.description ?? '').toLowerCase().includes(q)) {
-      hits.push({
-        kind: 'vacancy',
-        slug: v.slug,
-        title: v.title,
-        subtitle: `${v.salary} · ${v.schedule}`,
-        excerpt: v.description,
-      });
-    }
-  }
-  return hits;
-}

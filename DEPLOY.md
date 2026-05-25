@@ -2,13 +2,14 @@
 
 Web и Strapi на одной VDS, без домена, по HTTP.
 
-| Сервис   | URL                              |
-|----------|----------------------------------|
-| Web      | http://176.53.160.167:3001       |
-| Strapi   | http://176.53.160.167:3002       |
-| Admin    | http://176.53.160.167:3002/admin |
+| Сервис      | URL                              |
+|-------------|----------------------------------|
+| Web         | http://176.53.160.167:3001       |
+| Strapi      | http://176.53.160.167:3002       |
+| Admin       | http://176.53.160.167:3002/admin |
+| Meilisearch | http://localhost:7700 (только loopback) |
 
-Process manager — PM2, конфиг `ecosystem.config.js` в корне репо.
+Process manager — PM2 для Node-приложений (`ecosystem.config.js`); Meilisearch — отдельным docker-контейнером (`docker-compose.yml` в корне репо).
 
 ## Первый деплой
 
@@ -25,6 +26,7 @@ cd new-pyshma
 # 2. .env-файлы
 cp apps/cms/.env.example apps/cms/.env
 cp apps/web/.env.example apps/web/.env.local
+cp .env.example .env            # для docker-compose
 ```
 
 В **`apps/cms/.env`**:
@@ -41,14 +43,28 @@ cp apps/web/.env.example apps/web/.env.local
 ```
 STRAPI_URL=http://176.53.160.167:3002
 NEXT_PUBLIC_SITE_URL=http://176.53.160.167:3001
+MEILI_HOST=http://localhost:7700
+MEILI_API_KEY=<тот же MEILI_MASTER_KEY, что в корневом .env>
 ```
 
+В **корневом `.env`** (читает docker-compose):
+```
+MEILI_MASTER_KEY=<32+ байт base64; node -e "console.log(require('crypto').randomBytes(32).toString('base64'))">
+MEILI_ENV=production
+```
+
+В **`apps/cms/.env`** допиши те же `MEILI_HOST` и `MEILI_MASTER_KEY` (плагин Strapi пишет в индексы).
+
 ```bash
-# 3. Сборка
+# 3. Установить Docker (если ещё нет) и поднять Meilisearch
+apt-get install -y docker.io docker-compose-v2
+docker compose up -d meilisearch
+
+# 4. Сборка приложений
 ( cd apps/cms && npm run build )
 ( cd apps/web && npm run build )
 
-# 4. PM2
+# 5. PM2
 pm2 start ecosystem.config.js
 pm2 save
 pm2 startup        # автозапуск после reboot
@@ -65,6 +81,7 @@ pm2 startup        # автозапуск после reboot
    - Festival, Festival Program, Past Festival
    - Footer
 3. Заполни контент.
+4. **Plugins → Meilisearch** — на каждой из коллекций `article`, `afisha`, `sport`, `vacancy` поставь галку «Add to Meilisearch». Дальше плагин держит индексы в синке через lifecycle-хуки create/update/delete; ручная реиндексация — кнопкой «Update» там же.
 
 ## Обновление
 
@@ -74,6 +91,7 @@ git pull
 ( cd apps/cms && npm ci && npm run build )
 ( cd apps/web && npm ci && npm run build )
 pm2 restart all
+docker compose up -d meilisearch  # на случай, если меняли образ/конфиг
 ```
 
 ## Бэкап
@@ -81,11 +99,12 @@ pm2 restart all
 Что копировать на бэкапном задании:
 - `apps/cms/.tmp/data.db` — SQLite-база
 - `apps/cms/public/uploads/` — загруженные файлы (картинки, PDF)
-- `apps/cms/.env` — секреты
+- `apps/cms/.env`, корневой `.env` — секреты
+- `data/meilisearch/` — индексы Meili (необязательно: можно пересобрать из Strapi кнопкой «Update» в плагине)
 
 ## Фаервол
 
-Открой порты `3001` и `3002` (ufw/iptables/панель провайдера). SSH (22) — только с твоего IP.
+Открой порты `3001` и `3002` (ufw/iptables/панель провайдера). SSH (22) — только с твоего IP. Порт Meilisearch `7700` наружу **не** открывать — обращения только из этой же машины через `localhost`.
 
 ## Когда появится домен/SSL
 
@@ -99,3 +118,4 @@ pm2 restart all
 - **Без HTTPS**: пароль admin Strapi летит открытым текстом — заходи только из доверенной сети.
 - **CRON**: задача очистки прошедших Afisha работает автоматически (см. `apps/cms/config/cron-tasks.ts`). Отключить — `CRON_ENABLED=false`.
 - **Кеш Next.js**: на проде `revalidate = 60 сек` для страниц и для большинства fetch'ей. Изменения в Strapi появятся максимум через минуту.
+- **Поиск**: `/api/search` и страница `/search` ходят в Meilisearch (`MEILI_HOST` / `MEILI_API_KEY`). Если Meili лежит — поиск вернёт пусто, остальной сайт работает.
