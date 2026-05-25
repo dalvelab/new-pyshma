@@ -128,11 +128,7 @@ export function SearchModal({ open, onClose }: Props) {
             <div className="p-10 text-center">
               <div className="font-extrabold text-2xl">Ничего не нашли</div>
               <div className="mt-2 text-sm text-ink-70">
-                Попробуй переформулировать или открой{' '}
-                <a href="/news" className="underline">
-                  все новости
-                </a>
-                .
+                Попробуйте переформулировать
               </div>
             </div>
           ) : (

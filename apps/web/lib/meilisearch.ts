@@ -54,16 +54,16 @@ export async function searchMeili(qRaw: string): Promise<SearchHit[]> {
 
   const res = await client.multiSearch({
     queries: [
-      { indexUid: 'articles', q, limit: PER_INDEX_LIMIT },
-      { indexUid: 'afishas', q, limit: PER_INDEX_LIMIT },
-      { indexUid: 'sports', q, limit: PER_INDEX_LIMIT },
-      { indexUid: 'vacancies', q, limit: PER_INDEX_LIMIT },
+      { indexUid: 'article', q, limit: PER_INDEX_LIMIT },
+      { indexUid: 'afisha', q, limit: PER_INDEX_LIMIT },
+      { indexUid: 'sport', q, limit: PER_INDEX_LIMIT },
+      { indexUid: 'vacancy', q, limit: PER_INDEX_LIMIT },
     ],
   });
 
   const hits: SearchHit[] = [];
   for (const r of res.results) {
-    if (r.indexUid === 'articles') {
+    if (r.indexUid === 'article') {
       for (const h of r.hits as ArticleHit[]) {
         hits.push({
           kind: 'news',
@@ -73,7 +73,7 @@ export async function searchMeili(qRaw: string): Promise<SearchHit[]> {
           excerpt: h.excerpt ?? undefined,
         });
       }
-    } else if (r.indexUid === 'afishas') {
+    } else if (r.indexUid === 'afisha') {
       for (const h of r.hits as AfishaHit[]) {
         const date = formatEkb(h.startsAt, {
           day: 'numeric',
@@ -89,7 +89,7 @@ export async function searchMeili(qRaw: string): Promise<SearchHit[]> {
           excerpt: h.showSmallDescription ?? h.showDescription ?? undefined,
         });
       }
-    } else if (r.indexUid === 'sports') {
+    } else if (r.indexUid === 'sport') {
       for (const h of r.hits as SportHit[]) {
         const parts = [h.locationName, h.age].filter(Boolean);
         hits.push({
@@ -100,7 +100,7 @@ export async function searchMeili(qRaw: string): Promise<SearchHit[]> {
           excerpt: h.description ?? undefined,
         });
       }
-    } else if (r.indexUid === 'vacancies') {
+    } else if (r.indexUid === 'vacancy') {
       for (const h of r.hits as VacancyHit[]) {
         const parts = [h.salary, h.schedule].filter(Boolean);
         hits.push({

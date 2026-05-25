@@ -53,7 +53,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
           <div className="border-1.5 border-dashed border-ink-30 rounded-xl p-10 text-center">
             <div className="font-extrabold text-3xl">Ничего не нашли</div>
             <div className="mt-3 text-base text-ink-70">
-              Попробуй другой запрос или загляни в новости / афишу напрямую.
+              Попробуйте другой запрос
             </div>
           </div>
         </section>

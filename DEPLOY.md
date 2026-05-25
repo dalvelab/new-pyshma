@@ -57,6 +57,10 @@ MEILI_ENV=production
 
 ```bash
 # 3. Установить Docker (если ещё нет) и поднять Meilisearch
+#    ВНИМАНИЕ: не использовать `snap install docker` — snap работает
+#    в confined-режиме и не видит файлы вне $HOME, compose упадёт с
+#    "no configuration file provided". Если уже стоит snap-версия —
+#    сначала: `snap remove docker`.
 apt-get install -y docker.io docker-compose-v2
 docker compose up -d meilisearch
 

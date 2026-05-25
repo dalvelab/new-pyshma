@@ -7,8 +7,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
       apiKey: env('MEILI_MASTER_KEY'),
 
       'api::article.article': {
-        indexName: 'articles',
-        entriesQuery: { populate: { category: true }, limit: 500 },
+entriesQuery: { populate: { category: true }, limit: 500 },
         settings: {
           searchableAttributes: ['title', 'excerpt', 'body', 'categoryName'],
           filterableAttributes: ['categoryName'],
@@ -30,8 +29,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
       },
 
       'api::afisha.afisha': {
-        indexName: 'afishas',
-        entriesQuery: {
+entriesQuery: {
           populate: { show: true, location: true },
           limit: 500,
         },
@@ -64,8 +62,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
       },
 
       'api::sport.sport': {
-        indexName: 'sports',
-        entriesQuery: {
+entriesQuery: {
           populate: { category: true, location: true },
           limit: 500,
         },
@@ -96,8 +93,7 @@ const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin =>
       },
 
       'api::vacancy.vacancy': {
-        indexName: 'vacancies',
-        entriesQuery: { populate: { category: true }, limit: 500 },
+entriesQuery: { populate: { category: true }, limit: 500 },
         settings: {
           searchableAttributes: [
             'title',
