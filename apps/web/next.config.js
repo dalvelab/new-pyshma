@@ -5,8 +5,8 @@ const nextConfig = {
     remotePatterns: [
       // dev
       { protocol: 'http', hostname: 'localhost', port: '1337' },
-      // prod (без домена, Strapi на :3002)
-      { protocol: 'http', hostname: '176.53.160.167', port: '3002' },
+      // prod (Strapi за доменом, HTTPS)
+      { protocol: 'https', hostname: 'admin.newpyshma.ru' },
     ],
   },
 };
