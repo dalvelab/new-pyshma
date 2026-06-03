@@ -693,6 +693,11 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     socials: Schema.Attribute.Component<'footer.social', true>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 80;
+      }> &
+      Schema.Attribute.DefaultTo<'\u041F\u043E\u0434\u0432\u0430\u043B \u0441\u0430\u0439\u0442\u0430'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
