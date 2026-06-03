@@ -12,6 +12,11 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "title": {
+      "type": "string",
+      "default": "Подвал сайта",
+      "maxLength": 80
+    },
     "documents": {
       "type": "component",
       "repeatable": true,

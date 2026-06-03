@@ -10,26 +10,34 @@ export function SportSection({ items }: Props) {
   return (
     <div>
       <SectionLabel>Спорт</SectionLabel>
-      <div>
-        {items.map((s) => (
-          <a
-            key={s.id}
-            href={`/sport/${s.slug}`}
-            className="flex justify-between items-center py-3.5 border-b border-dashed border-ink-20 font-sans text-[15px] text-ink no-underline"
-          >
-            <div>
-              <div className="font-bold">{s.name}</div>
-              <div className="text-xs text-ink-50 mt-0.5">
-                {s.age} · {s.schedule}
+      {items.length === 0 ? (
+        <div className="py-8 text-center text-sm text-ink-50 border-t border-dashed border-ink-20">
+          Пока нет открытых секций — заглядывайте позже.
+        </div>
+      ) : (
+        <div>
+          {items.map((s) => (
+            <a
+              key={s.id}
+              href={`/sport/${s.slug}`}
+              className="flex justify-between items-center py-3.5 border-b border-dashed border-ink-20 font-sans text-[15px] text-ink no-underline"
+            >
+              <div>
+                <div className="font-bold">{s.name}</div>
+                <div className="text-xs text-ink-50 mt-0.5">
+                  {s.age} · {s.schedule}
+                </div>
               </div>
-            </div>
-            <span className="font-bold">→</span>
-          </a>
-        ))}
-      </div>
-      <div className="mt-4">
-        <Button href="/sport">все секции →</Button>
-      </div>
+              <span className="font-bold">→</span>
+            </a>
+          ))}
+        </div>
+      )}
+      {items.length > 0 && (
+        <div className="mt-4">
+          <Button href="/sport">все секции →</Button>
+        </div>
+      )}
     </div>
   );
 }

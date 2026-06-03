@@ -1,5 +1,5 @@
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
-import { PatternBox } from '@/components/ui/PatternBox';
 import type { FestivalTeaser as FestivalTeaserData } from '@/lib/types';
 
 interface Props {
@@ -42,7 +42,16 @@ export function FestTeaser({ teaser }: Props) {
             )}
           </div>
         </div>
-        <PatternBox className="h-[240px] sm:h-[300px] md:h-[380px]" pattern="warm" illustration="stage" />
+        <div className="relative h-[240px] sm:h-[300px] md:h-[380px]">
+          <Image
+            src="/letter.png"
+            alt="Новая Пышма fest"
+            fill
+            sizes="(max-width: 768px) 100vw, 40vw"
+            className="object-contain"
+            priority
+          />
+        </div>
       </div>
       <div className="border-t border-cream/15 py-4 flex gap-7 items-center font-extrabold text-base whitespace-nowrap overflow-hidden">
         <div className="flex gap-7 animate-marquee">

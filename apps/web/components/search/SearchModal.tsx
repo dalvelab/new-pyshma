@@ -29,7 +29,12 @@ export function SearchModal({ open, onClose }: Props) {
   const [hits, setHits] = useState<SearchHit[]>([]);
   const [loading, setLoading] = useState(false);
   const [recent, setRecent] = useState<string[]>([]);
+  const [isTouch, setIsTouch] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setIsTouch(window.matchMedia('(pointer: coarse)').matches);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -75,29 +80,31 @@ export function SearchModal({ open, onClose }: Props) {
   if (typeof document === 'undefined') return null;
   return createPortal(
     <div
-      className="fixed inset-0 z-50 bg-ink/60 backdrop-blur-sm flex items-start justify-center p-6 pt-[10vh]"
+      className="fixed inset-0 z-50 bg-ink/60 backdrop-blur-sm flex items-start justify-center p-3 pt-[8vh] sm:p-6 sm:pt-[10vh]"
       onClick={onClose}
     >
       <div
         className="bg-paper border-1.5 border-ink rounded-2xl w-full max-w-[720px] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center gap-3 p-5 border-b-1.5 border-ink">
-          <span className="text-2xl font-bold text-ink-50">⌕</span>
+        <div className="flex items-center gap-3 p-5 sm:p-5 border-b-1.5 border-ink">
+          <span className="text-3xl sm:text-2xl font-bold text-ink-50">⌕</span>
           <input
             ref={inputRef}
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && submit()}
             placeholder="Поиск…"
-            className="flex-1 bg-transparent border-0 outline-none text-lg font-semibold placeholder:text-ink-50"
+            className="flex-1 bg-transparent border-0 outline-none py-1 text-xl sm:text-lg font-semibold placeholder:text-ink-50"
           />
-          <button
-            onClick={onClose}
-            className="px-3 py-1.5 rounded-md border-1.5 border-ink font-bold text-xs cursor-pointer"
-          >
-            esc
-          </button>
+          {!isTouch && (
+            <button
+              onClick={onClose}
+              className="px-3 py-1.5 rounded-md border-1.5 border-ink font-bold text-xs cursor-pointer"
+            >
+              esc
+            </button>
+          )}
         </div>
 
         <div className="max-h-[60vh] overflow-y-auto">

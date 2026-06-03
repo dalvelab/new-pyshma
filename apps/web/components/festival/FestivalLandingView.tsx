@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import type { FestivalLanding, FestivalProgram, PastFestival } from '@/lib/types';
+import { FaqItem } from './FaqItem';
 import { FestivalCountdown } from './FestivalCountdown';
 import { ProgramTabs } from './ProgramTabs';
 
@@ -212,21 +213,7 @@ export function FestivalLandingView({ data, pastYears, programs }: Props) {
               <SectionHeader title="Быстрые ответы" />
               <div className="flex flex-col">
                 {data.faq.map((f, i) => (
-                  <details
-                    key={i}
-                    className={`group py-5 ${i === 0 ? 'border-t-1.5 border-ink' : ''} border-b border-dashed border-ink-20`}
-                  >
-                    <summary className="flex items-baseline gap-3.5 font-bold text-[18px] cursor-pointer list-none">
-                      <span className="text-accent font-extrabold">0{i + 1}</span>
-                      <span className="flex-1">{f.q}</span>
-                      <span className="text-ink-50 text-[22px] group-open:rotate-45 transition-transform">
-                        +
-                      </span>
-                    </summary>
-                    <p className="mt-2.5 m-0 pl-7 font-medium text-sm leading-relaxed text-ink-70">
-                      {f.a}
-                    </p>
-                  </details>
+                  <FaqItem key={i} index={i} question={f.q} answer={f.a} first={i === 0} />
                 ))}
               </div>
             </div>

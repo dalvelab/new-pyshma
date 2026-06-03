@@ -9,6 +9,18 @@
     min-height: 100dvh;
     /* Запрещаем браузеру показывать свой фон при rubber-band overscroll */
     overscroll-behavior-y: none;
+    /* Плавный скролл к якорям (#id) */
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  /* Якорные секции не должны прятаться под липкой шапкой */
+  :target,
+  [id] {
+    scroll-margin-top: 96px;
   }
   body {
     background: theme("colors.paper");
