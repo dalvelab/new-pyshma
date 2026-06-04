@@ -12,6 +12,7 @@ import type {
   FestivalProgram,
   FestivalTeaser,
   FooterData,
+  PageIntros,
   PastFestival,
   SocialPlatform,
   Sport,
@@ -566,6 +567,35 @@ export async function getFestivalProgramBySlug(slug: string): Promise<FestivalPr
     query: `?filters[slug][$eq]=${encodeURIComponent(slug)}&${PROGRAM_POPULATE}`,
   });
   return remote?.[0] ? mapFestivalProgram(remote[0]) : null;
+}
+
+/* ──────────────── Тексты страниц ────────────────
+   Single type в Strapi: один редактируемый источник вступительных текстов.
+   Поля необязательны — пустое/отсутствующее значение не показывается. */
+
+interface StrapiPageIntro extends StrapiEntry {
+  heroIntro?: string | null;
+  festTeaserIntro?: string | null;
+  afishaIntro?: string | null;
+  vacanciesIntro?: string | null;
+  sportIntro?: string | null;
+}
+
+/** Нормализует строку: пустое/пробельное значение → undefined. */
+function cleanIntro(value: string | null | undefined): string | undefined {
+  return value?.trim() || undefined;
+}
+
+export async function getPageIntros(): Promise<PageIntros> {
+  const remote = await fetchStrapi<StrapiPageIntro>('page-intro');
+  if (!remote) return {};
+  return {
+    heroIntro: cleanIntro(remote.heroIntro),
+    festTeaserIntro: cleanIntro(remote.festTeaserIntro),
+    afishaIntro: cleanIntro(remote.afishaIntro),
+    vacanciesIntro: cleanIntro(remote.vacanciesIntro),
+    sportIntro: cleanIntro(remote.sportIntro),
+  };
 }
 
 /* ──────────────── Footer ──────────────── */

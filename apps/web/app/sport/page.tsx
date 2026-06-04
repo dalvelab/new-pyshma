@@ -1,11 +1,15 @@
 import { PageShell } from '@/components/layout/PageShell';
 import { SportListing } from '@/components/sport/SportListing';
-import { getAllSport, getAllSportCategories } from '@/lib/queries';
+import { getAllSport, getAllSportCategories, getPageIntros } from '@/lib/queries';
 
 export const revalidate = 60;
 
 export default async function SportIndexPage() {
-  const [items, categories] = await Promise.all([getAllSport(), getAllSportCategories()]);
+  const [items, categories, intros] = await Promise.all([
+    getAllSport(),
+    getAllSportCategories(),
+    getPageIntros(),
+  ]);
   return (
     <PageShell
       crumbs={[['Спорт']]}
@@ -14,7 +18,7 @@ export default async function SportIndexPage() {
           Спорт <span className="text-accent">в городе</span>
         </>
       }
-      intro="Справочник секций Верхней Пышмы — для детей и взрослых. От самбо и плавания до йоги."
+      intro={intros.sportIntro}
     >
       <SportListing items={items} categories={categories} />
     </PageShell>

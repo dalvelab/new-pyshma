@@ -4,11 +4,12 @@ import type { FestivalTeaser as FestivalTeaserData } from '@/lib/types';
 
 interface Props {
   teaser: FestivalTeaserData;
+  intro?: string;
 }
 
 const MARQUEE_FALLBACK = ['2 СЦЕНЫ', '38 ВЫСТУПЛЕНИЙ', '6 ПЛОЩАДОК', 'ВХОД СВОБОДНЫЙ'];
 
-export function FestTeaser({ teaser }: Props) {
+export function FestTeaser({ teaser, intro }: Props) {
   const marquee = teaser.marquee.length
     ? teaser.marquee.map((s) => s.toUpperCase())
     : MARQUEE_FALLBACK;
@@ -24,10 +25,9 @@ export function FestTeaser({ teaser }: Props) {
             <br />
             Пышма<span className="font-normal italic text-cream/70"> fest</span>
           </h2>
-          <p className="mt-5 max-w-[540px] text-[17px] leading-relaxed text-paper/80">
-            Главное городское событие года. Один день, две сцены, десятки площадок и весь город — на
-            одной площади.
-          </p>
+          {intro && (
+            <p className="mt-5 max-w-[540px] text-[17px] leading-relaxed text-paper/80">{intro}</p>
+          )}
           <div className="flex gap-3 mt-6">
             <Button variant="primary" href="/festival#program">
               программа →

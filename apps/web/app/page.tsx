@@ -4,6 +4,7 @@ import {
   getLatestSport,
   getLatestVacancies,
   getLeadArticle,
+  getPageIntros,
   getUpcomingEvents,
 } from '@/lib/queries';
 
@@ -23,16 +24,17 @@ import { VacanciesSection } from '@/components/home/VacanciesSection';
 export const revalidate = 60;
 
 async function getHomeData() {
-  const [lead, news, events, sport, vacancies, festival] = await Promise.all([
+  const [lead, news, events, sport, vacancies, festival, intros] = await Promise.all([
     getLeadArticle(),
     getLatestNews(4),
     getUpcomingEvents(4),
     getLatestSport(5),
     getLatestVacancies(5),
     getFestivalTeaser(),
+    getPageIntros(),
   ]);
 
-  return { lead, news, events, sport, vacancies, festival };
+  return { lead, news, events, sport, vacancies, festival, intros };
 }
 
 export default async function HomePage() {
@@ -42,11 +44,13 @@ export default async function HomePage() {
     <>
       <SiteHeader />
       <main>
-        <Hero />
+        <Hero intro={data.intros.heroIntro} />
         {data.lead && <LeadStory lead={data.lead} />}
         <NewsGrid items={data.news} />
         <AfishaRow items={data.events} />
-        {data.festival && <FestTeaser teaser={data.festival} />}
+        {data.festival && (
+          <FestTeaser teaser={data.festival} intro={data.intros.festTeaserIntro} />
+        )}
         <section className="px-4 md:px-9 py-9 border-b-1.5 border-ink max-w-page mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-9">
             <SportSection items={data.sport} />

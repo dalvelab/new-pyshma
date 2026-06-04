@@ -135,6 +135,23 @@ export interface FestivalLanding {
   faq?: Array<{ q: string; a: string }>;
 }
 
+/* ───────── Тексты страниц ───────── */
+
+/** Редактируемые из CMS вступительные тексты ключевых блоков и страниц.
+    Поле пустое/отсутствует → текст не показывается. */
+export interface PageIntros {
+  /** Главная, Hero — абзац под заголовком */
+  heroIntro?: string;
+  /** Главная, тизер фестиваля */
+  festTeaserIntro?: string;
+  /** Страница «Афиша города» */
+  afishaIntro?: string;
+  /** Страница «Работа в городе» */
+  vacanciesIntro?: string;
+  /** Страница «Спорт в городе» */
+  sportIntro?: string;
+}
+
 /* ───────── Footer ───────── */
 
 export type SocialPlatform = 'vk' | 'telegram' | 'max' | 'dzen';

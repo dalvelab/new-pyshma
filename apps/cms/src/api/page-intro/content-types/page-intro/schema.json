@@ -1,0 +1,36 @@
+{
+  "kind": "singleType",
+  "collectionName": "page_intros",
+  "info": {
+    "singularName": "page-intro",
+    "pluralName": "page-intros",
+    "displayName": "Тексты страниц",
+    "description": "Редактируемые вступительные тексты ключевых блоков и страниц"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "heroIntro": {
+      "type": "text",
+      "description": "Главная, Hero — абзац под заголовком «Это Новая Пышма»"
+    },
+    "festTeaserIntro": {
+      "type": "text",
+      "description": "Главная, тизер фестиваля — абзац под заголовком"
+    },
+    "afishaIntro": {
+      "type": "text",
+      "description": "Страница «Афиша города» — подзаголовок"
+    },
+    "vacanciesIntro": {
+      "type": "text",
+      "description": "Страница «Работа в городе» — подзаголовок"
+    },
+    "sportIntro": {
+      "type": "text",
+      "description": "Страница «Спорт в городе» — подзаголовок"
+    }
+  }
+}
