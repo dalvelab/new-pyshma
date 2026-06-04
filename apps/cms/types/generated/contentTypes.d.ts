@@ -693,11 +693,6 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     socials: Schema.Attribute.Component<'footer.social', true>;
-    title: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 80;
-      }> &
-      Schema.Attribute.DefaultTo<'\u041F\u043E\u0434\u0432\u0430\u043B \u0441\u0430\u0439\u0442\u0430'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -732,6 +727,39 @@ export interface ApiLocationLocation extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPageIntroPageIntro extends Struct.SingleTypeSchema {
+  collectionName: 'page_intros';
+  info: {
+    description: '\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u0443\u0435\u043C\u044B\u0435 \u0432\u0441\u0442\u0443\u043F\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0435 \u0442\u0435\u043A\u0441\u0442\u044B \u043A\u043B\u044E\u0447\u0435\u0432\u044B\u0445 \u0431\u043B\u043E\u043A\u043E\u0432 \u0438 \u0441\u0442\u0440\u0430\u043D\u0438\u0446';
+    displayName: '\u0422\u0435\u043A\u0441\u0442\u044B \u0441\u0442\u0440\u0430\u043D\u0438\u0446';
+    pluralName: 'page-intros';
+    singularName: 'page-intro';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    afishaIntro: Schema.Attribute.Text;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    festTeaserIntro: Schema.Attribute.Text;
+    heroIntro: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::page-intro.page-intro'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    sportIntro: Schema.Attribute.Text;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    vacanciesIntro: Schema.Attribute.Text;
   };
 }
 
@@ -1537,6 +1565,7 @@ declare module '@strapi/strapi' {
       'api::festival.festival': ApiFestivalFestival;
       'api::footer.footer': ApiFooterFooter;
       'api::location.location': ApiLocationLocation;
+      'api::page-intro.page-intro': ApiPageIntroPageIntro;
       'api::past-festival.past-festival': ApiPastFestivalPastFestival;
       'api::show.show': ApiShowShow;
       'api::sport-category.sport-category': ApiSportCategorySportCategory;
