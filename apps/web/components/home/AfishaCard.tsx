@@ -25,8 +25,10 @@ export function AfishaCard({ event }: Props) {
           <div className="font-bold text-[11px] tracking-[0.08em] text-accent uppercase">
             {formatEventDate(event.startsAt)}
           </div>
-          <div className="font-bold text-base leading-[1.2]">{event.title}</div>
-          <div className="text-xs text-ink-50">{event.place}</div>
+          <div className="font-bold text-base leading-[1.2] line-clamp-2 min-h-[2.4em]">
+            {event.title}
+          </div>
+          <div className="text-xs text-ink-50 line-clamp-1">{event.place}</div>
           <div className="mt-auto flex justify-between items-center pt-1.5">
             <Pill variant={event.free ? 'accent' : 'default'}>
               {event.free ? 'бесплатно' : `от ${event.priceFrom} ₽`}

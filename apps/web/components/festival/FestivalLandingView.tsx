@@ -125,8 +125,8 @@ export function FestivalLandingView({ data, pastYears, programs }: Props) {
 
       {/* VENUES — карта площадок */}
       {data.mapImage && (
-        <section id="venues" className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-paper-2">
-          <div className="max-w-page mx-auto">
+        <section id="venues" className="py-12 border-t-1.5 border-ink bg-paper-2">
+          <div className="max-w-page mx-auto px-4 md:px-9">
             <SectionHeader title="Карта · площадки" />
             <div className="relative aspect-[16/8] border-1.5 border-ink rounded-xl overflow-hidden bg-cream">
               <Image
@@ -143,8 +143,8 @@ export function FestivalLandingView({ data, pastYears, programs }: Props) {
 
       {/* PAST YEARS */}
       {pastYears.length > 0 && (
-      <section id="past" className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-cream">
-        <div className="max-w-page mx-auto">
+      <section id="past" className="py-12 border-t-1.5 border-ink bg-cream">
+        <div className="max-w-page mx-auto px-4 md:px-9">
           <SectionHeader
             title={`Архив · ${pastYears.length} ${pastYears.length === 1 ? 'сезон' : 'сезона'}`}
           />
@@ -207,8 +207,8 @@ export function FestivalLandingView({ data, pastYears, programs }: Props) {
 
       {/* PARTNERS */}
       {data.partners && data.partners.length > 0 && (
-        <section id="partners" className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-cream">
-          <div className="max-w-page mx-auto">
+        <section id="partners" className="py-12 border-t-1.5 border-ink bg-cream">
+          <div className="max-w-page mx-auto px-4 md:px-9">
             <SectionHeader title="Партнёры" />
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-[18px]">
               {data.partners.map((p, i) => {
@@ -248,8 +248,8 @@ export function FestivalLandingView({ data, pastYears, programs }: Props) {
 
       {/* FAQ + CTA */}
       {data.faq && data.faq.length > 0 && (
-        <section className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-paper-2">
-          <div className="max-w-page mx-auto grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-9">
+        <section className="py-12 border-t-1.5 border-ink bg-paper-2">
+          <div className="max-w-page mx-auto px-4 md:px-9 grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-9">
             <div>
               <SectionHeader title="Быстрые ответы" />
               <div className="flex flex-col">
