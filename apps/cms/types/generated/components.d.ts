@@ -39,6 +39,19 @@ export interface FestivalFaqItem extends Struct.ComponentSchema {
   };
 }
 
+export interface FestivalPartner extends Struct.ComponentSchema {
+  collectionName: 'components_festival_partners';
+  info: {
+    displayName: 'Partner';
+    icon: 'briefcase';
+  };
+  attributes: {
+    logo: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    url: Schema.Attribute.String;
+  };
+}
+
 export interface FestivalStatItem extends Struct.ComponentSchema {
   collectionName: 'components_festival_stat_items';
   info: {
@@ -84,6 +97,7 @@ declare module '@strapi/strapi' {
       'common.contact': CommonContact;
       'event.ticket': EventTicket;
       'festival.faq-item': FestivalFaqItem;
+      'festival.partner': FestivalPartner;
       'festival.stat-item': FestivalStatItem;
       'footer.document': FooterDocument;
       'footer.social': FooterSocial;

@@ -51,6 +51,11 @@
       "type": "component",
       "repeatable": true,
       "component": "festival.faq-item"
+    },
+    "partners": {
+      "type": "component",
+      "repeatable": true,
+      "component": "festival.partner"
     }
   }
 }

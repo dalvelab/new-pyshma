@@ -656,6 +656,7 @@ export interface ApiFestivalFestival extends Struct.SingleTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 280;
       }>;
+    partners: Schema.Attribute.Component<'festival.partner', true>;
     poster: Schema.Attribute.Media<'images'>;
     publishedAt: Schema.Attribute.DateTime;
     seasonLabel: Schema.Attribute.String &

@@ -205,6 +205,47 @@ export function FestivalLandingView({ data, pastYears, programs }: Props) {
       </section>
       )}
 
+      {/* PARTNERS */}
+      {data.partners && data.partners.length > 0 && (
+        <section id="partners" className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-cream">
+          <div className="max-w-page mx-auto">
+            <SectionHeader title="Партнёры" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-[18px]">
+              {data.partners.map((p, i) => {
+                const inner = (
+                  <div className="relative aspect-[3/2] w-full">
+                    <Image
+                      src={p.logo.url}
+                      alt={p.logo.alt ?? p.name}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                      className="object-contain p-5"
+                    />
+                  </div>
+                );
+                return (
+                  <Card key={i} className="overflow-hidden btn-hover">
+                    {p.url ? (
+                      <a
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={p.name}
+                        className="block"
+                      >
+                        {inner}
+                      </a>
+                    ) : (
+                      inner
+                    )}
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* FAQ + CTA */}
       {data.faq && data.faq.length > 0 && (
         <section className="px-4 md:px-9 py-12 border-t-1.5 border-ink bg-paper-2">

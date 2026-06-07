@@ -133,6 +133,8 @@ export interface FestivalLanding {
   /** Постер фестиваля для hero (4:5) */
   poster?: { url: string; alt?: string };
   faq?: Array<{ q: string; a: string }>;
+  /** Партнёры фестиваля — логотип, название и опциональная ссылка */
+  partners?: Array<{ name: string; logo: { url: string; alt?: string }; url?: string }>;
 }
 
 /* ───────── Тексты страниц ───────── */

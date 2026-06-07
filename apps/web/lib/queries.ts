@@ -435,6 +435,13 @@ interface StrapiFestivalFaq {
   answer: string;
 }
 
+interface StrapiFestivalPartner {
+  id: number;
+  name: string;
+  logo?: StrapiMedia | null;
+  url?: string | null;
+}
+
 interface StrapiFestival extends StrapiEntry {
   date: string;
   startsAt: string;
@@ -445,10 +452,11 @@ interface StrapiFestival extends StrapiEntry {
   mapImage?: StrapiMedia | null;
   poster?: StrapiMedia | null;
   faq?: StrapiFestivalFaq[] | null;
+  partners?: StrapiFestivalPartner[] | null;
 }
 
 const FESTIVAL_POPULATE =
-  'populate[faq]=true&populate[mapImage]=true&populate[poster]=true';
+  'populate[faq]=true&populate[mapImage]=true&populate[poster]=true&populate[partners][populate]=logo';
 
 function mapFestival(entry: StrapiFestival): FestivalLanding {
   return {
@@ -470,6 +478,17 @@ function mapFestival(entry: StrapiFestival): FestivalLanding {
         }
       : undefined,
     faq: entry.faq?.map((f) => ({ q: f.question, a: f.answer })) ?? undefined,
+    partners:
+      entry.partners
+        ?.filter((p) => p.logo)
+        .map((p) => ({
+          name: p.name,
+          logo: {
+            url: absoluteMediaUrl(p.logo?.url) ?? '',
+            alt: p.logo?.alternativeText ?? p.name,
+          },
+          url: p.url ?? undefined,
+        })) ?? undefined,
   };
 }
 
