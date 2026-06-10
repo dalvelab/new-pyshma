@@ -25,13 +25,13 @@ export function ArticlePage({ article }: Props) {
         )}
       </section>
 
-      <div className="relative h-[240px] sm:h-[360px] md:h-[480px] mx-4 md:mx-9 max-w-page md:mx-auto overflow-hidden">
+      <div className="relative h-[240px] sm:h-[360px] md:h-[480px] mx-4 md:mx-9 max-w-page md:mx-auto overflow-hidden rounded-xl bg-paper-2">
         <Image
           src={article.cover.url}
           alt={article.cover.alt ?? article.title}
           fill
           sizes="(max-width: 768px) 100vw, 860px"
-          className="object-cover"
+          className="object-contain"
           priority
         />
       </div>

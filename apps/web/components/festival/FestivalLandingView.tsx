@@ -86,7 +86,7 @@ export function FestivalLandingView({ data, pastYears, programs }: Props) {
             <div className="grid grid-cols-2 border-1.5 border-cream rounded-xl overflow-hidden">
               {[
                 { l: 'дата', v: data.date, sub: '' },
-                { l: 'место', v: 'Площадь', sub: data.city },
+                { l: 'место', v: data.city, sub: '' },
                 { l: 'вход', v: 'свободный', sub: 'без билетов' },
                 {
                   l: 'программа',
