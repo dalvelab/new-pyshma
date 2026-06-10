@@ -2,6 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { AfishaCard } from '@/components/home/AfishaCard';
+import { CardGrid } from '@/components/ui/CardGrid';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { FilterButton } from '@/components/ui/FilterButton';
 import type { Event } from '@/lib/types';
 
 interface Props {
@@ -30,27 +33,20 @@ export function AfishaListing({ items }: Props) {
     <section className="px-4 md:px-9 py-9 max-w-page mx-auto">
       <div className="flex flex-wrap gap-2 mb-7">
         {PRICES.map((p) => (
-          <button
-            key={p}
-            type="button"
-            onClick={() => setPrice(p)}
-            className={`px-3.5 py-2 rounded-full border-1.5 border-ink font-semibold text-xs cursor-pointer btn-hover ${price === p ? 'bg-ink text-cream' : 'bg-cream text-ink'}`}
-          >
+          <FilterButton key={p} active={price === p} onClick={() => setPrice(p)} tone="ink">
             {p}
-          </button>
+          </FilterButton>
         ))}
       </div>
 
       {filtered.length === 0 ? (
-        <div className="border-1.5 border-dashed border-ink-30 rounded-xl p-10 text-center text-ink-70">
-          Сейчас нет событий по выбранному фильтру.
-        </div>
+        <EmptyState>Сейчас нет событий по выбранному фильтру.</EmptyState>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <CardGrid cols={4}>
           {filtered.map((e) => (
             <AfishaCard key={e.id} event={e} />
           ))}
-        </div>
+        </CardGrid>
       )}
     </section>
   );

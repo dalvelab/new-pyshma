@@ -12,7 +12,8 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error(error);
+    // В проде стек-трейсы не светим в консоль; здесь точка для отправки в систему мониторинга.
+    if (process.env.NODE_ENV !== 'production') console.error(error);
   }, [error]);
   return (
     <html lang="ru">
@@ -29,8 +30,8 @@ export default function GlobalError({
               Мы уже знаем и чиним. Можно перезагрузить страницу или вернуться на главную.
             </p>
             <div className="mt-6 flex gap-2.5 justify-center">
-              <Button variant="primary">
-                <span onClick={reset}>перезагрузить</span>
+              <Button variant="primary" onClick={reset}>
+                перезагрузить
               </Button>
               <Button href="/">на главную</Button>
             </div>

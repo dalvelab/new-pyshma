@@ -5,6 +5,9 @@ import { loadNewsPage } from '@/lib/actions';
 import type { NewsPage } from '@/lib/queries';
 import { NewsCard } from '@/components/home/NewsCard';
 import { Button } from '@/components/ui/Button';
+import { CardGrid } from '@/components/ui/CardGrid';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { FilterButton } from '@/components/ui/FilterButton';
 
 interface Props {
   initial: NewsPage;
@@ -54,34 +57,31 @@ export function NewsListing({ initial, categories }: Props) {
     <section className="px-4 md:px-9 py-9 max-w-page mx-auto">
       <div className="flex flex-wrap gap-2.5 mb-7">
         {filters.map((f) => (
-          <button
+          <FilterButton
             key={f}
+            active={cat === f}
             onClick={() => handleFilter(f)}
             disabled={pending && cat === f}
-            className={`px-4 py-2 rounded-full border-1.5 border-ink font-semibold text-sm cursor-pointer btn-hover ${
-              cat === f ? 'bg-accent text-white' : 'bg-cream text-ink'
-            }`}
+            size="md"
           >
             {f}
-          </button>
+          </FilterButton>
         ))}
       </div>
 
       {items.length === 0 ? (
-        <div className="border-1.5 border-dashed border-ink-30 rounded-xl p-10 text-center text-ink-70">
-          {pending ? 'Загружаем…' : 'В этой категории пока ничего нет.'}
-        </div>
+        <EmptyState>{pending ? 'Загружаем…' : 'В этой категории пока ничего нет.'}</EmptyState>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <CardGrid cols={4}>
           {items.map((a) => (
             <NewsCard key={a.id} article={a} />
           ))}
-        </div>
+        </CardGrid>
       )}
 
       {hasMore && (
         <div className="mt-8 flex justify-center">
-          <Button variant="primary" onClick={handleMore}>
+          <Button variant="primary" onClick={handleMore} disabled={pending}>
             {pending ? 'загружаем…' : `показать ещё (${total - items.length})`}
           </Button>
         </div>

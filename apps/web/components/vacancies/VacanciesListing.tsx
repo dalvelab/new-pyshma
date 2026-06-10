@@ -2,6 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { Card } from '@/components/ui/Card';
+import { CardGrid } from '@/components/ui/CardGrid';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { FilterButton } from '@/components/ui/FilterButton';
 import { Pill } from '@/components/ui/Pill';
 import type { Vacancy } from '@/lib/types';
 
@@ -76,14 +79,9 @@ export function VacanciesListing({ items, categories }: Props) {
               сфера:
             </span>
             {cats.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setCat(c)}
-                className={`px-3.5 py-2 rounded-full border-1.5 border-ink font-semibold text-xs cursor-pointer btn-hover ${cat === c ? 'bg-accent text-white' : 'bg-cream text-ink'}`}
-              >
+              <FilterButton key={c} active={cat === c} onClick={() => setCat(c)}>
                 {c}
-              </button>
+              </FilterButton>
             ))}
           </div>
           <div className="flex flex-wrap gap-2 items-center">
@@ -91,25 +89,18 @@ export function VacanciesListing({ items, categories }: Props) {
               формат:
             </span>
             {TYPES.map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={() => setType(t)}
-                className={`px-3.5 py-2 rounded-full border-1.5 border-ink font-semibold text-xs cursor-pointer btn-hover ${type === t ? 'bg-ink text-cream' : 'bg-cream text-ink'}`}
-              >
+              <FilterButton key={t} active={type === t} onClick={() => setType(t)} tone="ink">
                 {t}
-              </button>
+              </FilterButton>
             ))}
           </div>
         </div>
       </div>
 
       {filtered.length === 0 ? (
-        <div className="border-1.5 border-dashed border-ink-30 rounded-xl p-10 text-center text-ink-70">
-          Под фильтры ничего не подошло. Попробуйте сбросить параметры.
-        </div>
+        <EmptyState>Под фильтры ничего не подошло. Попробуйте сбросить параметры.</EmptyState>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <CardGrid cols={3}>
           {filtered.map((v) => (
             <a key={v.id} href={`/vacancies/${v.slug}`} className="block">
               <Card className="p-5 flex flex-col gap-2.5 h-full">
@@ -129,7 +120,7 @@ export function VacanciesListing({ items, categories }: Props) {
               </Card>
             </a>
           ))}
-        </div>
+        </CardGrid>
       )}
     </section>
   );

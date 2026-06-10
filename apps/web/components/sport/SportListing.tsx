@@ -2,6 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { Card } from '@/components/ui/Card';
+import { CardGrid } from '@/components/ui/CardGrid';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { FilterButton } from '@/components/ui/FilterButton';
 import { Pill } from '@/components/ui/Pill';
 import type { Sport } from '@/lib/types';
 
@@ -32,21 +35,14 @@ export function SportListing({ items, categories }: Props) {
     <section className="px-4 md:px-9 py-9 max-w-page mx-auto">
       <div className="flex flex-wrap gap-2 mb-8">
         {cats.map((c) => (
-          <button
-            key={c}
-            type="button"
-            onClick={() => setCat(c)}
-            className={`px-3.5 py-2 rounded-full border-1.5 border-ink font-semibold text-xs cursor-pointer btn-hover ${cat === c ? 'bg-accent text-white' : 'bg-cream text-ink'}`}
-          >
+          <FilterButton key={c} active={cat === c} onClick={() => setCat(c)}>
             {c}
-          </button>
+          </FilterButton>
         ))}
       </div>
 
       {grouped.length === 0 ? (
-        <div className="border-1.5 border-dashed border-ink-30 rounded-xl p-10 text-center text-ink-70">
-          В этой категории пока ничего нет.
-        </div>
+        <EmptyState>В этой категории пока ничего нет.</EmptyState>
       ) : (
         <div className="flex flex-col gap-10">
           {grouped.map(([key, list]) => (
@@ -56,7 +52,7 @@ export function SportListing({ items, categories }: Props) {
                 <span className="text-xs text-ink-50">{list.length}</span>
                 <span className="flex-1 h-[1.5px] bg-ink" />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <CardGrid cols={3}>
                 {list.map((s) => (
                   <a key={s.id} href={`/sport/${s.slug}`}>
                     <Card className="p-4 flex flex-col gap-2 h-full">
@@ -69,7 +65,7 @@ export function SportListing({ items, categories }: Props) {
                     </Card>
                   </a>
                 ))}
-              </div>
+              </CardGrid>
             </div>
           ))}
         </div>

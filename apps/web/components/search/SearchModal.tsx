@@ -28,6 +28,7 @@ export function SearchModal({ open, onClose }: Props) {
   const [q, setQ] = useState('');
   const [hits, setHits] = useState<SearchHit[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [recent, setRecent] = useState<string[]>([]);
   const [isTouch, setIsTouch] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -55,13 +56,16 @@ export function SearchModal({ open, onClose }: Props) {
       return;
     }
     setLoading(true);
+    setError(false);
     const t = setTimeout(async () => {
       try {
         const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+        if (!res.ok) throw new Error(`search failed: ${res.status}`);
         const json = await res.json();
         setHits(json.hits ?? []);
       } catch {
         setHits([]);
+        setError(true);
       }
       setLoading(false);
     }, 220);
@@ -131,6 +135,13 @@ export function SearchModal({ open, onClose }: Props) {
             </div>
           ) : loading ? (
             <div className="p-10 text-center text-ink-50">ищем…</div>
+          ) : error ? (
+            <div className="p-10 text-center">
+              <div className="font-extrabold text-2xl">Поиск недоступен</div>
+              <div className="mt-2 text-sm text-ink-70">
+                Что-то с подключением. Попробуйте ещё раз чуть позже.
+              </div>
+            </div>
           ) : hits.length === 0 ? (
             <div className="p-10 text-center">
               <div className="font-extrabold text-2xl">Ничего не нашли</div>

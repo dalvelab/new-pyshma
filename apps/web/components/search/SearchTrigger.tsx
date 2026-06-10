@@ -1,7 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { SearchModal } from './SearchModal';
+import dynamic from 'next/dynamic';
+
+// Модалка тяжёлая (портал, listeners, localStorage) и не нужна на первом рендере —
+// грузим её только при первом открытии поиска.
+const SearchModal = dynamic(() => import('./SearchModal').then((m) => m.SearchModal), {
+  ssr: false,
+});
 
 /** Кнопка-открыватель модалки поиска в шапке. Слушает ⌘K / Ctrl+K. */
 export function SearchTrigger() {
@@ -25,7 +31,7 @@ export function SearchTrigger() {
       >
         ⌕
       </button>
-      <SearchModal open={open} onClose={() => setOpen(false)} />
+      {open && <SearchModal open onClose={() => setOpen(false)} />}
     </>
   );
 }
