@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Montserrat } from 'next/font/google';
+import { YandexMetrika } from '@/components/layout/YandexMetrika';
 import './globals.css';
 
 const montserrat = Montserrat({
@@ -40,7 +41,21 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" className={montserrat.variable}>
-      <body className="font-sans antialiased bg-grain">{children}</body>
+      <body className="font-sans antialiased bg-grain">
+        <YandexMetrika />
+        {process.env.NEXT_PUBLIC_METRIKA === 'production' && (
+          <noscript>
+            <div>
+              <img
+                src="https://mc.yandex.ru/watch/109891067"
+                style={{ position: 'absolute', left: '-9999px' }}
+                alt=""
+              />
+            </div>
+          </noscript>
+        )}
+        {children}
+      </body>
     </html>
   );
 }
