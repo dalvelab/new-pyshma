@@ -22,8 +22,14 @@ function pluralDays(n: number): string {
 }
 
 export function FestivalLandingView({ data, pastYears, programs }: Props) {
-  const msLeft = new Date(data.startsAt).getTime() - Date.now();
+  const now = Date.now();
+  const msLeft = new Date(data.startsAt).getTime() - now;
   const daysLeft = msLeft > 0 ? Math.ceil(msLeft / 86_400_000) : 0;
+  // Без endsAt считаем фестиваль однодневным: заканчивается через сутки после старта.
+  const endsAt = data.endsAt
+    ? new Date(data.endsAt).getTime()
+    : new Date(data.startsAt).getTime() + 86_400_000;
+  const isOver = now > endsAt;
 
   return (
     <article>
@@ -269,28 +275,42 @@ export function FestivalLandingView({ data, pastYears, programs }: Props) {
               />
               <div className="relative">
                 <div className="font-bold text-[11px] tracking-[0.22em] uppercase text-paper/60 mb-2.5">
-                  будь рядом
+                  {isOver ? 'до встречи' : 'будь рядом'}
                 </div>
                 <div className="font-extrabold text-[36px] leading-[0.98] tracking-tighter2">
-                  {daysLeft > 0 ? (
-                    <>
-                      До&nbsp;фестиваля
-                      <br />
-                      {daysLeft}&nbsp;{pluralDays(daysLeft)}.
-                      <br />
-                    </>
-                  ) : (
+                  {isOver ? (
                     <>
                       Фестиваль
                       <br />
-                      уже начался.
+                      завершился.
                       <br />
+                      <span className="text-accent">До новых встреч.</span>
+                    </>
+                  ) : (
+                    <>
+                      {daysLeft > 0 ? (
+                        <>
+                          До&nbsp;фестиваля
+                          <br />
+                          {daysLeft}&nbsp;{pluralDays(daysLeft)}.
+                          <br />
+                        </>
+                      ) : (
+                        <>
+                          Фестиваль
+                          <br />
+                          уже начался.
+                          <br />
+                        </>
+                      )}
+                      <span className="text-accent">Не пропустите.</span>
                     </>
                   )}
-                  <span className="text-accent">Не пропустите.</span>
                 </div>
                 <div className="mt-4 font-medium text-sm leading-relaxed text-paper/70">
-                  Подпишитесь, чтобы первыми узнавать про лайн-ап, перенос площадок и другие новости.
+                  {isOver
+                    ? 'Спасибо всем, кто был с нами. Подпишитесь, чтобы первыми узнать даты следующего фестиваля.'
+                    : 'Подпишитесь, чтобы первыми узнавать про лайн-ап, перенос площадок и другие новости.'}
                 </div>
               </div>
               <div className="relative flex flex-col gap-2.5">

@@ -21,6 +21,9 @@
       "type": "datetime",
       "required": true
     },
+    "endsAt": {
+      "type": "datetime"
+    },
     "city": {
       "type": "string",
       "required": true

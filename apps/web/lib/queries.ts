@@ -445,6 +445,7 @@ interface StrapiFestivalPartner {
 interface StrapiFestival extends StrapiEntry {
   date: string;
   startsAt: string;
+  endsAt?: string | null;
   city: string;
   intro: string;
   seasonLabel?: string | null;
@@ -462,6 +463,7 @@ function mapFestival(entry: StrapiFestival): FestivalLanding {
   return {
     date: entry.date,
     startsAt: entry.startsAt,
+    endsAt: entry.endsAt ?? undefined,
     city: entry.city,
     intro: entry.intro,
     seasonLabel: entry.seasonLabel ?? undefined,

@@ -124,6 +124,8 @@ export interface PastFestival {
 export interface FestivalLanding {
   date: string;
   startsAt: string; // ISO datetime — момент старта для обратного отсчёта
+  /** ISO datetime — окончание. Не задано → фестиваль считается однодневным. */
+  endsAt?: string;
   city: string;
   intro: string;
   /** Подпись сезона в hero, например «3-й сезон» */
