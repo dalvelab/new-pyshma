@@ -44,7 +44,7 @@ export default async function HomePage() {
     <>
       <SiteHeader />
       <main>
-        <Hero />
+        <Hero intro={data.intros.heroIntro} />
         {data.lead && <LeadStory lead={data.lead} />}
         <NewsGrid items={data.news} />
         <AfishaRow items={data.events} />

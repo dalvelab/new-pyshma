@@ -4,7 +4,7 @@
   "info": {
     "singularName": "page-intro",
     "pluralName": "page-intros",
-    "displayName": "Тексты страниц",
+    "displayName": "Page Intros",
     "description": "Редактируемые вступительные тексты ключевых блоков и страниц"
   },
   "options": {
@@ -12,6 +12,10 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "heroIntro": {
+      "type": "text",
+      "description": "Главная, Hero — абзац под заголовком «Это Новая Пышма»"
+    },
     "festTeaserIntro": {
       "type": "text",
       "description": "Главная, тизер фестиваля — абзац под заголовком"
