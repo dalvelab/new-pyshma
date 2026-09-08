@@ -1,5 +1,53 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface AboutHistoryItem extends Struct.ComponentSchema {
+  collectionName: 'components_about_history_items';
+  info: {
+    description: '\u041A\u0430\u0440\u0442\u043E\u0447\u043A\u0430 \u0431\u043B\u043E\u043A\u0430 \u00AB\u0438\u0441\u0442\u043E\u0440\u0438\u044F\u00BB \u0438 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u0430\u044F \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0430 /about/history/<slug>';
+    displayName: 'History Item';
+    icon: 'clock';
+  };
+  attributes: {
+    body: Schema.Attribute.RichText & Schema.Attribute.Required;
+    illustration: Schema.Attribute.Enumeration<
+      [
+        'city',
+        'park',
+        'pond',
+        'stage',
+        'crowd',
+        'portrait',
+        'building',
+        'sport',
+        'leaf',
+        'sun',
+        'abstract',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'building'>;
+    image: Schema.Attribute.Media<'images'>;
+    pattern: Schema.Attribute.Enumeration<
+      ['diag', 'dots', 'cross', 'warm', 'block', 'sun', 'zigzag']
+    > &
+      Schema.Attribute.DefaultTo<'cross'>;
+    slug: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 80;
+      }>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    year: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 20;
+      }>;
+  };
+}
+
 export interface CommonContact extends Struct.ComponentSchema {
   collectionName: 'components_common_contacts';
   info: {
@@ -94,6 +142,7 @@ export interface FooterSocial extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'about.history-item': AboutHistoryItem;
       'common.contact': CommonContact;
       'event.ticket': EventTicket;
       'festival.faq-item': FestivalFaqItem;

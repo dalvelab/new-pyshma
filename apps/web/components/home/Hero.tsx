@@ -14,7 +14,7 @@ export function Hero({ intro }: Props) {
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-5 items-end">
         {intro && (
-          <p className="m-0 text-lg leading-relaxed text-ink-70 max-w-[540px]">{intro}</p>
+          <p className="m-0 text-[18px] leading-[1.65] text-ink max-w-[540px]">{intro}</p>
         )}
         <div className="flex gap-2.5 md:justify-end">
           <Button variant="primary" href="/news">

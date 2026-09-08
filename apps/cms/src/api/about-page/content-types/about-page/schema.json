@@ -4,14 +4,18 @@
   "info": {
     "singularName": "about-page",
     "pluralName": "about-pages",
-    "displayName": "О проекте",
-    "description": "Страница «О проекте»: текст о команде и фото"
+    "displayName": "About Page",
+    "description": "Страница «О проекте»: hero-текст, блок о команде и история"
   },
   "options": {
     "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
+    "heroIntro": {
+      "type": "text",
+      "description": "Hero — абзац под заголовком «Это Новая Пышма»"
+    },
     "story": {
       "type": "richtext",
       "required": true,
@@ -22,6 +26,12 @@
       "multiple": false,
       "allowedTypes": ["images"],
       "description": "Фото справа от текста (необязательно)"
+    },
+    "history": {
+      "type": "component",
+      "repeatable": true,
+      "component": "about.history-item",
+      "description": "Карточки блока «история» — в порядке показа"
     }
   }
 }

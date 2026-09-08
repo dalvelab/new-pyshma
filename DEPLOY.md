@@ -83,7 +83,7 @@ pm2 startup        # автозапуск после reboot
    - Sport, Sport Category
    - Vacancy, Vacancy Category
    - Festival, Festival Program, Past Festival
-   - Footer, About Page, History Item
+   - Footer, About Page
 3. Заполни контент.
 4. **Plugins → Meilisearch** — на каждой из коллекций `article`, `afisha`, `sport`, `vacancy` поставь галку «Add to Meilisearch». Дальше плагин держит индексы в синке через lifecycle-хуки create/update/delete; ручная реиндексация — кнопкой «Update» там же.
 

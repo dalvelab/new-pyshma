@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getAboutPage, getHistoryItems, getPageIntros } from '@/lib/queries';
+import { getAboutPage } from '@/lib/queries';
 
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
@@ -17,19 +17,15 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const [intros, about, history] = await Promise.all([
-    getPageIntros(),
-    getAboutPage(),
-    getHistoryItems(),
-  ]);
+  const about = await getAboutPage();
 
   return (
     <>
       <SiteHeader />
       <main>
-        <Hero intro={intros.heroIntro} />
+        <Hero intro={about?.heroIntro} />
         {about?.story && <AboutStory markdown={about.story} image={about.image} />}
-        {history.length > 0 && <AboutHistory items={history} />}
+        {about && about.history.length > 0 && <AboutHistory items={about.history} />}
       </main>
       <SiteFooter />
     </>

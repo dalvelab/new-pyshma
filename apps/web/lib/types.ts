@@ -144,9 +144,13 @@ export interface FestivalLanding {
 /* ───────── О проекте ───────── */
 
 export interface AboutPage {
+  /** Hero — абзац под заголовком «Это Новая Пышма». */
+  heroIntro?: string;
   /** Markdown-текст блока «команда». */
   story: string;
   image?: { url: string; alt: string };
+  /** Карточки блока «история» — в порядке показа. */
+  history: HistoryItem[];
 }
 
 export interface HistoryItem {
@@ -169,8 +173,6 @@ export interface HistoryItem {
 /** Редактируемые из CMS вступительные тексты ключевых блоков и страниц.
     Поле пустое/отсутствует → текст не показывается. */
 export interface PageIntros {
-  /** Главная, Hero — абзац под заголовком */
-  heroIntro?: string;
   /** Главная, тизер фестиваля */
   festTeaserIntro?: string;
   /** Страница «Афиша города» */

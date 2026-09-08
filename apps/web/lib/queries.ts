@@ -599,7 +599,6 @@ export async function getFestivalProgramBySlug(slug: string): Promise<FestivalPr
    Поля необязательны — пустое/отсутствующее значение не показывается. */
 
 interface StrapiPageIntro extends StrapiEntry {
-  heroIntro?: string | null;
   festTeaserIntro?: string | null;
   afishaIntro?: string | null;
   vacanciesIntro?: string | null;
@@ -615,7 +614,6 @@ export async function getPageIntros(): Promise<PageIntros> {
   const remote = await fetchStrapi<StrapiPageIntro>('page-intro');
   if (!remote) return {};
   return {
-    heroIntro: cleanIntro(remote.heroIntro),
     festTeaserIntro: cleanIntro(remote.festTeaserIntro),
     afishaIntro: cleanIntro(remote.afishaIntro),
     vacanciesIntro: cleanIntro(remote.vacanciesIntro),
@@ -623,30 +621,11 @@ export async function getPageIntros(): Promise<PageIntros> {
   };
 }
 
-/* ──────────────── О проекте ──────────────── */
+/* ──────────────── О проекте ────────────────
+   Single type: hero-текст, блок о команде и повторяющийся компонент «история». */
 
-interface StrapiAboutPage extends StrapiEntry {
-  story?: string | null;
-  image?: StrapiMedia | null;
-}
-
-export async function getAboutPage(): Promise<AboutPage | null> {
-  const remote = await fetchStrapi<StrapiAboutPage>('about-page', {
-    query: '?populate[image]=true',
-  });
-  if (!remote) return null;
-  return {
-    story: remote.story ?? '',
-    image: remote.image
-      ? {
-          url: absoluteMediaUrl(remote.image.url) ?? '',
-          alt: remote.image.alternativeText ?? 'Новая Пышма',
-        }
-      : undefined,
-  };
-}
-
-interface StrapiHistoryItem extends StrapiEntry {
+interface StrapiHistoryItem {
+  id: number;
   slug: string;
   year: string;
   title: string;
@@ -654,10 +633,16 @@ interface StrapiHistoryItem extends StrapiEntry {
   image?: StrapiMedia | null;
   pattern?: Pattern | null;
   illustration?: Illustration | null;
-  order?: number | null;
 }
 
-const HISTORY_POPULATE = 'populate[image]=true';
+interface StrapiAboutPage extends StrapiEntry {
+  heroIntro?: string | null;
+  story?: string | null;
+  image?: StrapiMedia | null;
+  history?: StrapiHistoryItem[] | null;
+}
+
+const ABOUT_POPULATE = 'populate[image]=true&populate[history][populate]=image';
 
 function mapHistoryItem(entry: StrapiHistoryItem): HistoryItem {
   return {
@@ -676,22 +661,27 @@ function mapHistoryItem(entry: StrapiHistoryItem): HistoryItem {
   };
 }
 
-/** Карточки блока «история» — без тяжёлого `body`. */
-export async function getHistoryItems(): Promise<HistoryItem[]> {
-  const remote = await fetchStrapi<StrapiHistoryItem[]>('history-items', {
-    query:
-      '?sort[0]=order:asc&sort[1]=year:asc&pagination[limit]=50' +
-      '&fields[0]=slug&fields[1]=year&fields[2]=title&fields[3]=pattern&fields[4]=illustration' +
-      `&${HISTORY_POPULATE}`,
+export async function getAboutPage(): Promise<AboutPage | null> {
+  const remote = await fetchStrapi<StrapiAboutPage>('about-page', {
+    query: `?${ABOUT_POPULATE}`,
   });
-  return remote?.map(mapHistoryItem) ?? [];
+  if (!remote) return null;
+  return {
+    heroIntro: cleanIntro(remote.heroIntro),
+    story: remote.story ?? '',
+    image: remote.image
+      ? {
+          url: absoluteMediaUrl(remote.image.url) ?? '',
+          alt: remote.image.alternativeText ?? 'Новая Пышма',
+        }
+      : undefined,
+    history: remote.history?.map(mapHistoryItem) ?? [],
+  };
 }
 
 export async function getHistoryItemBySlug(slug: string): Promise<HistoryItem | null> {
-  const remote = await fetchStrapi<StrapiHistoryItem[]>('history-items', {
-    query: `?filters[slug][$eq]=${encodeURIComponent(slug)}&${HISTORY_POPULATE}`,
-  });
-  return remote?.[0] ? mapHistoryItem(remote[0]) : null;
+  const about = await getAboutPage();
+  return about?.history.find((h) => h.slug === slug) ?? null;
 }
 
 /* ──────────────── Footer ──────────────── */

@@ -3,13 +3,13 @@ import { notFound } from 'next/navigation';
 import { HistoryPage } from '@/components/about/HistoryPage';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
-import { getHistoryItemBySlug, getHistoryItems } from '@/lib/queries';
+import { getAboutPage, getHistoryItemBySlug } from '@/lib/queries';
 
 export const revalidate = 60;
 
 export async function generateStaticParams() {
-  const all = await getHistoryItems();
-  return all.map((h) => ({ slug: h.slug }));
+  const about = await getAboutPage();
+  return (about?.history ?? []).map((h) => ({ slug: h.slug }));
 }
 
 export async function generateMetadata({

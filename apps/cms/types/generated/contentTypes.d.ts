@@ -443,8 +443,8 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
   collectionName: 'about_pages';
   info: {
-    description: '\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u00AB\u041E \u043F\u0440\u043E\u0435\u043A\u0442\u0435\u00BB: \u0442\u0435\u043A\u0441\u0442 \u043E \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u0438 \u0444\u043E\u0442\u043E';
-    displayName: '\u041E \u043F\u0440\u043E\u0435\u043A\u0442\u0435';
+    description: '\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u00AB\u041E \u043F\u0440\u043E\u0435\u043A\u0442\u0435\u00BB: hero-\u0442\u0435\u043A\u0441\u0442, \u0431\u043B\u043E\u043A \u043E \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u0438 \u0438\u0441\u0442\u043E\u0440\u0438\u044F';
+    displayName: 'About Page';
     pluralName: 'about-pages';
     singularName: 'about-page';
   };
@@ -455,6 +455,8 @@ export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    heroIntro: Schema.Attribute.Text;
+    history: Schema.Attribute.Component<'about.history-item', true>;
     image: Schema.Attribute.Media<'images'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -841,7 +843,6 @@ export interface ApiPageIntroPageIntro extends Struct.SingleTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     festTeaserIntro: Schema.Attribute.Text;
-    heroIntro: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

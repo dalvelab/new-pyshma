@@ -1,21 +1,18 @@
 {
-  "kind": "collectionType",
-  "collectionName": "history_items",
+  "collectionName": "components_about_history_items",
   "info": {
-    "singularName": "history-item",
-    "pluralName": "history-items",
-    "displayName": "История проекта",
-    "description": "Карточки блока «история» на странице «О проекте» и отдельные страницы /about/history/<slug>"
+    "displayName": "History Item",
+    "icon": "clock",
+    "description": "Карточка блока «история» и отдельная страница /about/history/<slug>"
   },
-  "options": {
-    "draftAndPublish": false
-  },
-  "pluginOptions": {},
+  "options": {},
   "attributes": {
     "slug": {
-      "type": "uid",
-      "targetField": "title",
-      "required": true
+      "type": "string",
+      "required": true,
+      "regex": "^[a-z0-9-]+$",
+      "maxLength": 80,
+      "description": "Адрес страницы: /about/history/<slug>, латиница и дефисы"
     },
     "year": {
       "type": "string",
@@ -51,11 +48,6 @@
       "enum": ["city", "park", "pond", "stage", "crowd", "portrait", "building", "sport", "leaf", "sun", "abstract"],
       "default": "building",
       "description": "Иллюстрация плейсхолдера (когда нет фото)"
-    },
-    "order": {
-      "type": "integer",
-      "default": 0,
-      "description": "Порядок карточек в блоке (по возрастанию)"
     }
   }
 }
