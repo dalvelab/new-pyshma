@@ -9,29 +9,8 @@ export interface AboutHistoryItem extends Struct.ComponentSchema {
   };
   attributes: {
     body: Schema.Attribute.RichText & Schema.Attribute.Required;
-    illustration: Schema.Attribute.Enumeration<
-      [
-        'city',
-        'park',
-        'pond',
-        'stage',
-        'crowd',
-        'portrait',
-        'building',
-        'sport',
-        'leaf',
-        'sun',
-        'abstract',
-      ]
-    > &
-      Schema.Attribute.DefaultTo<'building'>;
     image: Schema.Attribute.Media<'images'>;
-    pattern: Schema.Attribute.Enumeration<
-      ['diag', 'dots', 'cross', 'warm', 'block', 'sun', 'zigzag']
-    > &
-      Schema.Attribute.DefaultTo<'cross'>;
     slug: Schema.Attribute.String &
-      Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 80;
       }>;

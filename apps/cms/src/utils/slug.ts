@@ -11,14 +11,18 @@ function formatDate(d: Date): string {
   return `${dd}-${mm}-${yyyy}`;
 }
 
-export function buildSlug(title: string, date: Date): string {
+/** Транслит заголовка без даты: латиница/цифры/дефис. */
+export function slugify(title: string): string {
   const transliterated = translit.transform(title, '-').toLowerCase();
   // Оставляем только латиницу/цифры/дефис; всё остальное (кавычки-ёлочки,
   // точки, скобки, неразрывные пробелы, эмодзи и т.п.) → дефис,
   // потом схлопываем повторы и срезаем по краям.
-  const base = transliterated
+  return transliterated
     .replace(/[^a-z0-9-]+/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
-  return `${base}-${formatDate(date)}`;
+}
+
+export function buildSlug(title: string, date: Date): string {
+  return `${slugify(title)}-${formatDate(date)}`;
 }

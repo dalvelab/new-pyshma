@@ -5,7 +5,6 @@ import {
   type StrapiEntry,
   type StrapiMedia,
 } from './strapi';
-import type { Illustration } from '@/components/ui/PatternBox';
 import type {
   AboutPage,
   Article,
@@ -17,7 +16,6 @@ import type {
   HistoryItem,
   PageIntros,
   PastFestival,
-  Pattern,
   SocialPlatform,
   Sport,
   Vacancy,
@@ -633,8 +631,6 @@ interface StrapiHistoryItem {
   title: string;
   body?: string | null;
   image?: StrapiMedia | null;
-  pattern?: Pattern | null;
-  illustration?: Illustration | null;
 }
 
 interface StrapiAboutPage extends StrapiEntry {
@@ -652,8 +648,6 @@ function mapHistoryItem(entry: StrapiHistoryItem): HistoryItem {
     year: entry.year,
     title: entry.title,
     body: entry.body ?? '',
-    pattern: entry.pattern ?? 'cross',
-    illustration: entry.illustration ?? 'building',
     image: entry.image
       ? {
           url: absoluteMediaUrl(entry.image.url) ?? '',

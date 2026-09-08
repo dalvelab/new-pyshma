@@ -1,4 +1,5 @@
 import type { Core } from '@strapi/strapi';
+import { assignHistorySlugs } from './utils/history-slugs';
 
 /**
  * Сверяет ссылки на компоненты во всех схемах (content-types и компонентах)
@@ -63,7 +64,18 @@ export default {
    *
    * This gives you an opportunity to extend code.
    */
-  register(/* { strapi }: { strapi: Core.Strapi } */) {},
+  register({ strapi }: { strapi: Core.Strapi }) {
+    // About Page: slug карточек «истории» считаем из title при каждом сохранении.
+    strapi.documents.use((ctx, next) => {
+      if (
+        ctx.uid === 'api::about-page.about-page' &&
+        (ctx.action === 'create' || ctx.action === 'update')
+      ) {
+        assignHistorySlugs((ctx.params as { data?: { history?: unknown } }).data?.history);
+      }
+      return next();
+    });
+  },
 
   /**
    * An asynchronous bootstrap function that runs before

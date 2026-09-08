@@ -31,8 +31,8 @@ export function AboutHistory({ items }: Props) {
               ) : (
                 <PatternBox
                   className="h-44 border-0 border-b-1.5"
-                  pattern={item.pattern}
-                  illustration={item.illustration}
+                  pattern="cross"
+                  illustration="building"
                   rounded={false}
                 />
               )}

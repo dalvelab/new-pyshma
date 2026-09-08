@@ -1,8 +1,6 @@
 /* Strapi-shaped types for всех страниц портала.
    Adjust to your actual schema if it diverges. */
 
-import type { Illustration } from '@/components/ui/PatternBox';
-
 export type Pattern = 'diag' | 'dots' | 'cross' | 'warm' | 'block' | 'sun' | 'zigzag';
 
 /* ───────── News ───────── */
@@ -161,10 +159,7 @@ export interface HistoryItem {
   title: string;
   /** Markdown-текст отдельной страницы. */
   body: string;
-  /** Плейсхолдер вместо фото, пока нет реального снимка. */
-  pattern: Pattern;
-  illustration: Illustration;
-  /** Реальное фото (если задано) — заменит плейсхолдер. */
+  /** Фото карточки; без него показывается узор-плейсхолдер. */
   image?: { url: string; alt: string };
 }
 

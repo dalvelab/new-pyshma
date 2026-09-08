@@ -9,10 +9,8 @@
   "attributes": {
     "slug": {
       "type": "string",
-      "required": true,
-      "regex": "^[a-z0-9-]+$",
       "maxLength": 80,
-      "description": "Адрес страницы: /about/history/<slug>, латиница и дефисы"
+      "description": "Заполняется автоматически из заголовка (транслит). Адрес: /about/history/<slug>"
     },
     "year": {
       "type": "string",
@@ -34,20 +32,10 @@
     "image": {
       "type": "media",
       "multiple": false,
-      "allowedTypes": ["images"],
+      "allowedTypes": [
+        "images"
+      ],
       "description": "Фото карточки; если не задано — показывается узор с иллюстрацией"
-    },
-    "pattern": {
-      "type": "enumeration",
-      "enum": ["diag", "dots", "cross", "warm", "block", "sun", "zigzag"],
-      "default": "cross",
-      "description": "Узор плейсхолдера (когда нет фото)"
-    },
-    "illustration": {
-      "type": "enumeration",
-      "enum": ["city", "park", "pond", "stage", "crowd", "portrait", "building", "sport", "leaf", "sun", "abstract"],
-      "default": "building",
-      "description": "Иллюстрация плейсхолдера (когда нет фото)"
     }
   }
 }
