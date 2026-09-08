@@ -1,5 +1,5 @@
 import { Markdown } from '@/components/ui/Markdown';
-import type { HistoryItem } from '@/lib/about-content';
+import type { HistoryItem } from '@/lib/types';
 
 interface Props {
   item: HistoryItem;

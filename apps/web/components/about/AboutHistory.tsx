@@ -3,7 +3,7 @@ import { Card } from '@/components/ui/Card';
 import { CardGrid } from '@/components/ui/CardGrid';
 import { PatternBox } from '@/components/ui/PatternBox';
 import { SectionLabel } from '@/components/ui/SectionLabel';
-import type { HistoryItem } from '@/lib/about-content';
+import type { HistoryItem } from '@/lib/types';
 
 interface Props {
   items: HistoryItem[];
@@ -21,8 +21,8 @@ export function AboutHistory({ items }: Props) {
               {item.image ? (
                 <div className="relative h-44 border-b-1.5 border-ink">
                   <Image
-                    src={item.image}
-                    alt={item.title}
+                    src={item.image.url}
+                    alt={item.image.alt}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     className="object-cover"

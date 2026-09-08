@@ -1,0 +1,61 @@
+{
+  "kind": "collectionType",
+  "collectionName": "history_items",
+  "info": {
+    "singularName": "history-item",
+    "pluralName": "history-items",
+    "displayName": "История проекта",
+    "description": "Карточки блока «история» на странице «О проекте» и отдельные страницы /about/history/<slug>"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "year": {
+      "type": "string",
+      "required": true,
+      "maxLength": 20,
+      "description": "Крупный заголовок отдельной страницы, например «2025»"
+    },
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 200,
+      "description": "Заголовок карточки"
+    },
+    "body": {
+      "type": "richtext",
+      "required": true,
+      "description": "Markdown-текст отдельной страницы"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"],
+      "description": "Фото карточки; если не задано — показывается узор с иллюстрацией"
+    },
+    "pattern": {
+      "type": "enumeration",
+      "enum": ["diag", "dots", "cross", "warm", "block", "sun", "zigzag"],
+      "default": "cross",
+      "description": "Узор плейсхолдера (когда нет фото)"
+    },
+    "illustration": {
+      "type": "enumeration",
+      "enum": ["city", "park", "pond", "stage", "crowd", "portrait", "building", "sport", "leaf", "sun", "abstract"],
+      "default": "building",
+      "description": "Иллюстрация плейсхолдера (когда нет фото)"
+    },
+    "order": {
+      "type": "integer",
+      "default": 0,
+      "description": "Порядок карточек в блоке (по возрастанию)"
+    }
+  }
+}

@@ -1,6 +1,8 @@
 /* Strapi-shaped types for всех страниц портала.
    Adjust to your actual schema if it diverges. */
 
+import type { Illustration } from '@/components/ui/PatternBox';
+
 export type Pattern = 'diag' | 'dots' | 'cross' | 'warm' | 'block' | 'sun' | 'zigzag';
 
 /* ───────── News ───────── */
@@ -137,6 +139,29 @@ export interface FestivalLanding {
   faq?: Array<{ q: string; a: string }>;
   /** Партнёры фестиваля — логотип, название и опциональная ссылка */
   partners?: Array<{ name: string; logo: { url: string; alt?: string }; url?: string }>;
+}
+
+/* ───────── О проекте ───────── */
+
+export interface AboutPage {
+  /** Markdown-текст блока «команда». */
+  story: string;
+  image?: { url: string; alt: string };
+}
+
+export interface HistoryItem {
+  /** Адрес страницы: /about/history/<slug> */
+  slug: string;
+  /** Год — заголовок отдельной страницы. */
+  year: string;
+  title: string;
+  /** Markdown-текст отдельной страницы. */
+  body: string;
+  /** Плейсхолдер вместо фото, пока нет реального снимка. */
+  pattern: Pattern;
+  illustration: Illustration;
+  /** Реальное фото (если задано) — заменит плейсхолдер. */
+  image?: { url: string; alt: string };
 }
 
 /* ───────── Тексты страниц ───────── */

@@ -440,6 +440,36 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAboutPageAboutPage extends Struct.SingleTypeSchema {
+  collectionName: 'about_pages';
+  info: {
+    description: '\u0421\u0442\u0440\u0430\u043D\u0438\u0446\u0430 \u00AB\u041E \u043F\u0440\u043E\u0435\u043A\u0442\u0435\u00BB: \u0442\u0435\u043A\u0441\u0442 \u043E \u043A\u043E\u043C\u0430\u043D\u0434\u0435 \u0438 \u0444\u043E\u0442\u043E';
+    displayName: '\u041E \u043F\u0440\u043E\u0435\u043A\u0442\u0435';
+    pluralName: 'about-pages';
+    singularName: 'about-page';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    image: Schema.Attribute.Media<'images'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::about-page.about-page'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    story: Schema.Attribute.RichText & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiAfishaAfisha extends Struct.CollectionTypeSchema {
   collectionName: 'afishas';
   info: {
@@ -643,6 +673,7 @@ export interface ApiFestivalFestival extends Struct.SingleTypeSchema {
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 60;
       }>;
+    endsAt: Schema.Attribute.DateTime;
     faq: Schema.Attribute.Component<'festival.faq-item', true>;
     intro: Schema.Attribute.Text & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -697,6 +728,68 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+  };
+}
+
+export interface ApiHistoryItemHistoryItem extends Struct.CollectionTypeSchema {
+  collectionName: 'history_items';
+  info: {
+    description: '\u041A\u0430\u0440\u0442\u043E\u0447\u043A\u0438 \u0431\u043B\u043E\u043A\u0430 \u00AB\u0438\u0441\u0442\u043E\u0440\u0438\u044F\u00BB \u043D\u0430 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u0435 \u00AB\u041E \u043F\u0440\u043E\u0435\u043A\u0442\u0435\u00BB \u0438 \u043E\u0442\u0434\u0435\u043B\u044C\u043D\u044B\u0435 \u0441\u0442\u0440\u0430\u043D\u0438\u0446\u044B /about/history/<slug>';
+    displayName: '\u0418\u0441\u0442\u043E\u0440\u0438\u044F \u043F\u0440\u043E\u0435\u043A\u0442\u0430';
+    pluralName: 'history-items';
+    singularName: 'history-item';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    body: Schema.Attribute.RichText & Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    illustration: Schema.Attribute.Enumeration<
+      [
+        'city',
+        'park',
+        'pond',
+        'stage',
+        'crowd',
+        'portrait',
+        'building',
+        'sport',
+        'leaf',
+        'sun',
+        'abstract',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'building'>;
+    image: Schema.Attribute.Media<'images'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::history-item.history-item'
+    > &
+      Schema.Attribute.Private;
+    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    pattern: Schema.Attribute.Enumeration<
+      ['diag', 'dots', 'cross', 'warm', 'block', 'sun', 'zigzag']
+    > &
+      Schema.Attribute.DefaultTo<'cross'>;
+    publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 200;
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    year: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 20;
+      }>;
   };
 }
 
@@ -1559,12 +1652,14 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::about-page.about-page': ApiAboutPageAboutPage;
       'api::afisha.afisha': ApiAfishaAfisha;
       'api::article.article': ApiArticleArticle;
       'api::category.category': ApiCategoryCategory;
       'api::festival-program.festival-program': ApiFestivalProgramFestivalProgram;
       'api::festival.festival': ApiFestivalFestival;
       'api::footer.footer': ApiFooterFooter;
+      'api::history-item.history-item': ApiHistoryItemHistoryItem;
       'api::location.location': ApiLocationLocation;
       'api::page-intro.page-intro': ApiPageIntroPageIntro;
       'api::past-festival.past-festival': ApiPastFestivalPastFestival;

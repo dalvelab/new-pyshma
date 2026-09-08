@@ -3,14 +3,21 @@ import { notFound } from 'next/navigation';
 import { HistoryPage } from '@/components/about/HistoryPage';
 import { SiteFooter } from '@/components/layout/SiteFooter';
 import { SiteHeader } from '@/components/layout/SiteHeader';
-import { ABOUT_HISTORY, getHistoryItem } from '@/lib/about-content';
+import { getHistoryItemBySlug, getHistoryItems } from '@/lib/queries';
 
-export function generateStaticParams() {
-  return ABOUT_HISTORY.map((h) => ({ slug: h.slug }));
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const all = await getHistoryItems();
+  return all.map((h) => ({ slug: h.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const item = getHistoryItem(params.slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string };
+}): Promise<Metadata> {
+  const item = await getHistoryItemBySlug(params.slug);
   if (!item) return {};
   return {
     title: `${item.year} — ${item.title} — Новая Пышма`,
@@ -19,8 +26,8 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   };
 }
 
-export default function HistoryRoute({ params }: { params: { slug: string } }) {
-  const item = getHistoryItem(params.slug);
+export default async function HistoryRoute({ params }: { params: { slug: string } }) {
+  const item = await getHistoryItemBySlug(params.slug);
   if (!item) notFound();
   return (
     <>

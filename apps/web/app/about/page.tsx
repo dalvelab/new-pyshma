@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
-import { getPageIntros } from '@/lib/queries';
-import { ABOUT_HISTORY, ABOUT_STORY_MD } from '@/lib/about-content';
+import { getAboutPage, getHistoryItems, getPageIntros } from '@/lib/queries';
 
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
@@ -18,18 +17,19 @@ export const metadata: Metadata = {
 };
 
 export default async function AboutPage() {
-  const intros = await getPageIntros();
+  const [intros, about, history] = await Promise.all([
+    getPageIntros(),
+    getAboutPage(),
+    getHistoryItems(),
+  ]);
 
   return (
     <>
       <SiteHeader />
       <main>
         <Hero intro={intros.heroIntro} />
-        <AboutStory
-          markdown={ABOUT_STORY_MD}
-          image={{ src: '/cover.png', alt: 'Новая Пышма' }}
-        />
-        <AboutHistory items={ABOUT_HISTORY} />
+        {about?.story && <AboutStory markdown={about.story} image={about.image} />}
+        {history.length > 0 && <AboutHistory items={history} />}
       </main>
       <SiteFooter />
     </>

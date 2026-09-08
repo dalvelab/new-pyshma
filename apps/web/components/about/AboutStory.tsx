@@ -4,7 +4,7 @@ import { SectionLabel } from '@/components/ui/SectionLabel';
 
 interface Props {
   markdown: string;
-  image?: { src: string; alt: string };
+  image?: { url: string; alt: string };
 }
 
 /** Блок «о проекте»: markdown-текст слева, фото справа. */
@@ -19,7 +19,7 @@ export function AboutStory({ markdown, image }: Props) {
         {image && (
           <div className="relative aspect-[3/4] md:sticky md:top-6 rounded-xl overflow-hidden border-1.5 border-ink">
             <Image
-              src={image.src}
+              src={image.url}
               alt={image.alt}
               fill
               sizes="(max-width: 768px) 100vw, 45vw"

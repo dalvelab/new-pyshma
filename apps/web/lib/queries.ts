@@ -5,15 +5,19 @@ import {
   type StrapiEntry,
   type StrapiMedia,
 } from './strapi';
+import type { Illustration } from '@/components/ui/PatternBox';
 import type {
+  AboutPage,
   Article,
   Event,
   FestivalLanding,
   FestivalProgram,
   FestivalTeaser,
   FooterData,
+  HistoryItem,
   PageIntros,
   PastFestival,
+  Pattern,
   SocialPlatform,
   Sport,
   Vacancy,
@@ -617,6 +621,77 @@ export async function getPageIntros(): Promise<PageIntros> {
     vacanciesIntro: cleanIntro(remote.vacanciesIntro),
     sportIntro: cleanIntro(remote.sportIntro),
   };
+}
+
+/* ──────────────── О проекте ──────────────── */
+
+interface StrapiAboutPage extends StrapiEntry {
+  story?: string | null;
+  image?: StrapiMedia | null;
+}
+
+export async function getAboutPage(): Promise<AboutPage | null> {
+  const remote = await fetchStrapi<StrapiAboutPage>('about-page', {
+    query: '?populate[image]=true',
+  });
+  if (!remote) return null;
+  return {
+    story: remote.story ?? '',
+    image: remote.image
+      ? {
+          url: absoluteMediaUrl(remote.image.url) ?? '',
+          alt: remote.image.alternativeText ?? 'Новая Пышма',
+        }
+      : undefined,
+  };
+}
+
+interface StrapiHistoryItem extends StrapiEntry {
+  slug: string;
+  year: string;
+  title: string;
+  body?: string | null;
+  image?: StrapiMedia | null;
+  pattern?: Pattern | null;
+  illustration?: Illustration | null;
+  order?: number | null;
+}
+
+const HISTORY_POPULATE = 'populate[image]=true';
+
+function mapHistoryItem(entry: StrapiHistoryItem): HistoryItem {
+  return {
+    slug: entry.slug,
+    year: entry.year,
+    title: entry.title,
+    body: entry.body ?? '',
+    pattern: entry.pattern ?? 'cross',
+    illustration: entry.illustration ?? 'building',
+    image: entry.image
+      ? {
+          url: absoluteMediaUrl(entry.image.url) ?? '',
+          alt: entry.image.alternativeText ?? entry.title,
+        }
+      : undefined,
+  };
+}
+
+/** Карточки блока «история» — без тяжёлого `body`. */
+export async function getHistoryItems(): Promise<HistoryItem[]> {
+  const remote = await fetchStrapi<StrapiHistoryItem[]>('history-items', {
+    query:
+      '?sort[0]=order:asc&sort[1]=year:asc&pagination[limit]=50' +
+      '&fields[0]=slug&fields[1]=year&fields[2]=title&fields[3]=pattern&fields[4]=illustration' +
+      `&${HISTORY_POPULATE}`,
+  });
+  return remote?.map(mapHistoryItem) ?? [];
+}
+
+export async function getHistoryItemBySlug(slug: string): Promise<HistoryItem | null> {
+  const remote = await fetchStrapi<StrapiHistoryItem[]>('history-items', {
+    query: `?filters[slug][$eq]=${encodeURIComponent(slug)}&${HISTORY_POPULATE}`,
+  });
+  return remote?.[0] ? mapHistoryItem(remote[0]) : null;
 }
 
 /* ──────────────── Footer ──────────────── */

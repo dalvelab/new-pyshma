@@ -1,0 +1,27 @@
+{
+  "kind": "singleType",
+  "collectionName": "about_pages",
+  "info": {
+    "singularName": "about-page",
+    "pluralName": "about-pages",
+    "displayName": "О проекте",
+    "description": "Страница «О проекте»: текст о команде и фото"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "story": {
+      "type": "richtext",
+      "required": true,
+      "description": "Блок «команда» — markdown-текст слева"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"],
+      "description": "Фото справа от текста (необязательно)"
+    }
+  }
+}
