@@ -12,18 +12,35 @@ interface Props {
 }
 
 export function EventPage({ event }: Props) {
+  const { cover } = event;
   return (
     <article>
       <section className="grid grid-cols-1 md:grid-cols-[1.3fr_1fr] gap-10 px-4 md:px-9 py-10 max-w-page mx-auto">
-        <div className="relative h-[260px] sm:h-[360px] md:h-[460px] overflow-hidden">
-          <Image
-            src={event.cover.url}
-            alt={event.cover.alt ?? event.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 60vw"
-            className="object-cover"
-            priority
-          />
+        <div className="self-start">
+          {cover.width && cover.height ? (
+            /* Афиша целиком, в своих пропорциях; очень высокие — ограничиваем по высоте */
+            <Image
+              src={cover.url}
+              alt={cover.alt ?? event.title}
+              width={cover.width}
+              height={cover.height}
+              sizes="(max-width: 768px) 100vw, 60vw"
+              className="block w-full h-auto max-h-[80vh] object-contain rounded-xl bg-paper-2"
+              priority
+            />
+          ) : (
+            /* Fallback без размеров файла: контейнер 4:5, без обрезки */
+            <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-paper-2">
+              <Image
+                src={cover.url}
+                alt={cover.alt ?? event.title}
+                fill
+                sizes="(max-width: 768px) 100vw, 60vw"
+                className="object-contain"
+                priority
+              />
+            </div>
+          )}
         </div>
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap gap-2">

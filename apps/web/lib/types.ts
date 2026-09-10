@@ -35,7 +35,8 @@ export interface Event {
   description?: string;
   /** Длинное описание (markdown) для страницы события */
   body?: string;
-  cover: { url: string; alt?: string };
+  /** width/height — реальные размеры файла из Strapi (для рендера без обрезки) */
+  cover: { url: string; alt?: string; width?: number; height?: number };
   ageLimit?: number;
   /** Ссылка на покупку билета */
   ticketUrl?: string;

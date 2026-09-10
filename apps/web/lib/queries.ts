@@ -196,6 +196,8 @@ function mapAfisha(entry: StrapiAfisha): Event {
     cover: {
       url: coverUrl,
       alt: entry.show?.image?.alternativeText ?? entry.show?.title ?? entry.title,
+      width: entry.show?.image?.width ?? undefined,
+      height: entry.show?.image?.height ?? undefined,
     },
     ageLimit: entry.show?.age_limit ?? undefined,
     ticketUrl: entry.ticketUrl ?? undefined,
