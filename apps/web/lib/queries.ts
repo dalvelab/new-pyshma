@@ -599,7 +599,6 @@ export async function getFestivalProgramBySlug(slug: string): Promise<FestivalPr
    Поля необязательны — пустое/отсутствующее значение не показывается. */
 
 interface StrapiPageIntro extends StrapiEntry {
-  heroIntro?: string | null;
   festTeaserIntro?: string | null;
   afishaIntro?: string | null;
   vacanciesIntro?: string | null;
@@ -615,7 +614,6 @@ export async function getPageIntros(): Promise<PageIntros> {
   const remote = await fetchStrapi<StrapiPageIntro>('page-intro');
   if (!remote) return {};
   return {
-    heroIntro: cleanIntro(remote.heroIntro),
     festTeaserIntro: cleanIntro(remote.festTeaserIntro),
     afishaIntro: cleanIntro(remote.afishaIntro),
     vacanciesIntro: cleanIntro(remote.vacanciesIntro),

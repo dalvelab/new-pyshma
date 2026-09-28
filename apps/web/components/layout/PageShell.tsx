@@ -15,7 +15,7 @@ interface Props {
 }
 
 /** Универсальный каркас второстепенной страницы.
-    Главная использует свой Hero, поэтому сюда не завязана. */
+    Главная собрана из собственных блоков, поэтому сюда не завязана. */
 export function PageShell({ title, crumbs, intro, toolbar, children }: Props) {
   return (
     <>

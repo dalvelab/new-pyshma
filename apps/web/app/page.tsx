@@ -10,7 +10,6 @@ import {
 
 import { SiteHeader } from '@/components/layout/SiteHeader';
 import { SiteFooter } from '@/components/layout/SiteFooter';
-import { Hero } from '@/components/home/Hero';
 import { LeadStory } from '@/components/home/LeadStory';
 import { NewsGrid } from '@/components/home/NewsGrid';
 import { AfishaRow } from '@/components/home/AfishaRow';
@@ -44,7 +43,6 @@ export default async function HomePage() {
     <>
       <SiteHeader />
       <main>
-        <Hero intro={data.intros.heroIntro} />
         {data.lead && <LeadStory lead={data.lead} />}
         <NewsGrid items={data.news} />
         <AfishaRow items={data.events} />

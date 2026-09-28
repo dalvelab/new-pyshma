@@ -1,6 +1,6 @@
 interface Props {
   num?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export function SectionLabel({ num, children }: Props) {
@@ -11,8 +11,8 @@ export function SectionLabel({ num, children }: Props) {
           {num}
         </span>
       )}
-      <span>{children}</span>
-      <span className="flex-1 h-[1.5px] bg-ink" />
+      {children && <span>{children}</span>}
+      <span className="flex-1 h-px bg-ink" />
     </div>
   );
 }

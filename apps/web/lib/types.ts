@@ -169,8 +169,6 @@ export interface HistoryItem {
 /** Редактируемые из CMS вступительные тексты ключевых блоков и страниц.
     Поле пустое/отсутствует → текст не показывается. */
 export interface PageIntros {
-  /** Главная, Hero — абзац под заголовком */
-  heroIntro?: string;
   /** Главная, тизер фестиваля */
   festTeaserIntro?: string;
   /** Страница «Афиша города» */

@@ -10,6 +10,7 @@ const NAV = [
   { href: '/vacancies', label: 'Вакансии' },
   { href: '/sport', label: 'Спорт' },
   { href: '/festival', label: 'Фестиваль' },
+  { href: '/about', label: 'О проекте' },
 ];
 
 function isActive(pathname: string, href: string) {

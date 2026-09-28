@@ -12,10 +12,6 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "heroIntro": {
-      "type": "text",
-      "description": "Главная, Hero — абзац под заголовком «Это Новая Пышма»"
-    },
     "festTeaserIntro": {
       "type": "text",
       "description": "Главная, тизер фестиваля — абзац под заголовком"
