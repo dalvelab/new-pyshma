@@ -3,8 +3,11 @@ services:
     image: getmeili/meilisearch:v1.11
     container_name: pyshma-meilisearch
     restart: unless-stopped
+    # Only localhost: web and cms reach Meili via http://localhost:7700.
+    # Docker bypasses ufw, so the port must not be published on 0.0.0.0.
     ports:
-      - "7700:7700"
+      - "127.0.0.1:7700:7700"
+      - "[::1]:7700:7700"
     environment:
       MEILI_MASTER_KEY: ${MEILI_MASTER_KEY}
       MEILI_ENV: ${MEILI_ENV:-development}
