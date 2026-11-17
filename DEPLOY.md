@@ -1,12 +1,12 @@
 # Деплой на VDS
 
-Web и Strapi на одной VDS, без домена, по HTTP.
+Web и Strapi на одной VDS. `<SERVER>` ниже — IP или домен сервера.
 
-| Сервис      | URL                              |
-|-------------|----------------------------------|
-| Web         | http://176.53.160.167:3001       |
-| Strapi      | http://176.53.160.167:3002       |
-| Admin       | http://176.53.160.167:3002/admin |
+| Сервис      | URL                                     |
+|-------------|-----------------------------------------|
+| Web         | http://<SERVER>:3001                    |
+| Strapi      | http://<SERVER>:3002                    |
+| Admin       | http://<SERVER>:3002/admin              |
 | Meilisearch | http://localhost:7700 (только loopback) |
 
 Process manager — PM2 для Node-приложений (`ecosystem.config.js`); Meilisearch — отдельным docker-контейнером (`docker-compose.yml` в корне репо).
@@ -14,7 +14,7 @@ Process manager — PM2 для Node-приложений (`ecosystem.config.js`)
 ## Первый деплой
 
 ```bash
-ssh root@176.53.160.167
+ssh <user>@<SERVER>
 cd /var/www
 git clone <repo-url> new-pyshma
 cd new-pyshma
@@ -41,8 +41,8 @@ cp .env.example .env            # для docker-compose
 
 В **`apps/web/.env.local`**:
 ```
-STRAPI_URL=http://176.53.160.167:3002
-NEXT_PUBLIC_SITE_URL=http://176.53.160.167:3001
+STRAPI_URL=http://<SERVER>:3002
+NEXT_PUBLIC_SITE_URL=http://<SERVER>:3001
 MEILI_HOST=http://localhost:7700
 MEILI_API_KEY=<тот же MEILI_MASTER_KEY, что в корневом .env>
 ```
@@ -76,7 +76,7 @@ pm2 startup        # автозапуск после reboot
 
 ## После первого запуска Strapi
 
-1. Открой http://176.53.160.167:3002/admin → создай admin-пользователя.
+1. Открой http://<SERVER>:3002/admin → создай admin-пользователя.
 2. **Settings → Users & Permissions Plugin → Roles → Public** — открой `find`/`findOne` для всех публичных коллекций:
    - Article, Category
    - Afisha, Show, Location
@@ -119,7 +119,7 @@ docker compose up -d meilisearch  # на случай, если меняли о�
 
 ## Что важно знать
 
-- **Без HTTPS**: пароль admin Strapi летит открытым текстом — заходи только из доверенной сети.
+- **HTTPS**: админку Strapi открывай только по HTTPS (nginx + certbot), иначе пароль admin передаётся открытым текстом.
 - **CRON**: задача очистки прошедших Afisha работает автоматически (см. `apps/cms/config/cron-tasks.ts`). Отключить — `CRON_ENABLED=false`.
 - **Кеш Next.js**: на проде `revalidate = 60 сек` для страниц и для большинства fetch'ей. Изменения в Strapi появятся максимум через минуту.
 - **Поиск**: `/api/search` и страница `/search` ходят в Meilisearch (`MEILI_HOST` / `MEILI_API_KEY`). Если Meili лежит — поиск вернёт пусто, остальной сайт работает.
