@@ -18,9 +18,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const program = await getFestivalProgramBySlug(params.slug);
+  const program = await getFestivalProgramBySlug((await params).slug);
   if (!program) return {};
   return buildMetadata({
     title: program.title,
@@ -33,9 +33,9 @@ export async function generateMetadata({
 export default async function FestivalProgramRoute({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const program = await getFestivalProgramBySlug(params.slug);
+  const program = await getFestivalProgramBySlug((await params).slug);
   if (!program) notFound();
 
   const fullDate = formatEkb(program.date, {

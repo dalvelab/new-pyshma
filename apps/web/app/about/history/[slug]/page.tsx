@@ -15,9 +15,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const item = await getHistoryItemBySlug(params.slug);
+  const item = await getHistoryItemBySlug((await params).slug);
   if (!item) return {};
   return {
     title: `${item.year} — ${item.title} — Новая Пышма`,
@@ -26,8 +26,8 @@ export async function generateMetadata({
   };
 }
 
-export default async function HistoryRoute({ params }: { params: { slug: string } }) {
-  const item = await getHistoryItemBySlug(params.slug);
+export default async function HistoryRoute({ params }: { params: Promise<{ slug: string }> }) {
+  const item = await getHistoryItemBySlug((await params).slug);
   if (!item) notFound();
   return (
     <>

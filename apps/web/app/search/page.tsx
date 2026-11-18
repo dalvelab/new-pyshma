@@ -17,8 +17,8 @@ const KIND_HREF: Record<SearchHit['kind'], (slug: string) => string> = {
   vacancy: (s) => `/vacancies/${s}`,
 };
 
-export default async function SearchPage({ searchParams }: { searchParams: { q?: string } }) {
-  const q = searchParams.q ?? '';
+export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const q = (await searchParams).q ?? '';
   const hits = q ? await searchMeili(q) : [];
   const grouped = hits.reduce<Record<SearchHit['kind'], SearchHit[]>>(
     (acc, h) => {

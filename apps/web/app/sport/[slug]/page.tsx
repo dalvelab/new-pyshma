@@ -16,9 +16,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const section = await getSportBySlug(params.slug);
+  const section = await getSportBySlug((await params).slug);
   if (!section) return {};
   return buildMetadata({
     title: section.name,
@@ -28,8 +28,8 @@ export async function generateMetadata({
   });
 }
 
-export default async function SportSectionRoute({ params }: { params: { slug: string } }) {
-  const section = await getSportBySlug(params.slug);
+export default async function SportSectionRoute({ params }: { params: Promise<{ slug: string }> }) {
+  const section = await getSportBySlug((await params).slug);
   if (!section) notFound();
   return (
     <>

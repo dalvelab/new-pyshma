@@ -17,9 +17,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const article = await getNewsBySlug(params.slug);
+  const article = await getNewsBySlug((await params).slug);
   if (!article) return {};
   return buildMetadata({
     title: article.title,
@@ -29,8 +29,8 @@ export async function generateMetadata({
   });
 }
 
-export default async function NewsArticleRoute({ params }: { params: { slug: string } }) {
-  const article = await getNewsBySlug(params.slug);
+export default async function NewsArticleRoute({ params }: { params: Promise<{ slug: string }> }) {
+  const article = await getNewsBySlug((await params).slug);
   if (!article) notFound();
   return (
     <>

@@ -20,9 +20,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const vacancy = await getVacancyBySlug(params.slug);
+  const vacancy = await getVacancyBySlug((await params).slug);
   if (!vacancy) return {};
   const title = vacancy.company ? `${vacancy.title} · ${vacancy.company}` : vacancy.title;
   return buildMetadata({
@@ -31,8 +31,8 @@ export async function generateMetadata({
   });
 }
 
-export default async function VacancyRoute({ params }: { params: { slug: string } }) {
-  const vacancy = await getVacancyBySlug(params.slug);
+export default async function VacancyRoute({ params }: { params: Promise<{ slug: string }> }) {
+  const vacancy = await getVacancyBySlug((await params).slug);
   if (!vacancy) notFound();
   const similar = await getSimilarVacancies({
     category: vacancy.category,

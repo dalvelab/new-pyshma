@@ -16,9 +16,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const event = await getEventBySlug(params.slug);
+  const event = await getEventBySlug((await params).slug);
   if (!event) return {};
   return buildMetadata({
     title: event.title,
@@ -28,8 +28,8 @@ export async function generateMetadata({
   });
 }
 
-export default async function AfishaEventRoute({ params }: { params: { slug: string } }) {
-  const event = await getEventBySlug(params.slug);
+export default async function AfishaEventRoute({ params }: { params: Promise<{ slug: string }> }) {
+  const event = await getEventBySlug((await params).slug);
   if (!event) notFound();
   return (
     <>
